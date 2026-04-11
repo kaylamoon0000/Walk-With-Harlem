@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Walk-to-Earn Harlem | Functional Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --blue1: #5aa7f5;
+      --blue2: #4b98ea;
+      --blue3: #428be1;
+      --navy: #17324f;
+      --navy2: #0f2439;
+      --green: #2dbb7f;
+      --gold: #f3bf4c;
+      --text: #7f8792;
+      --heading: #566170;
+      --line: #e7ebf0;
+      --soft: #f7f9fc;
+      --card: #ffffff;
+      --shadow: 0 1rem 2.5rem rgba(23, 50, 79, 0.08);
+      --radius: 1rem;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 400;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.65;
+      -webkit-text-size-adjust: none;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    button, input, select { font: inherit; }
+
+    h1, h2, h3, h4 {
+      margin: 0 0 1rem 0;
+      line-height: 1.2;
+      color: var(--heading);
+      letter-spacing: -0.02em;
+    }
+
+    h1 { font-size: clamp(2.8rem, 6vw, 4.6rem); font-weight: 700; }
+    h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; }
+    h3 { font-size: 1.6rem; font-weight: 700; }
+    h4 { font-size: 1.2rem; font-weight: 700; }
+    p { margin: 0 0 1rem 0; font-size: 1.06rem; }
+
+    .container {
+      width: min(1180px, calc(100% - 2rem));
+      margin: 0 auto;
+    }
+
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+      background: rgba(255,255,255,0.9);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      min-height: 4.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .brand-mark {
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 0.8rem;
+      background: linear-gradient(135deg, var(--blue1), var(--blue3));
+      color: white;
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-link {
+      padding: 0.7rem 0.95rem;
+      border-radius: 999px;
+      color: #5f6c7b;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #edf5ff;
+      color: var(--blue3);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,0.2), transparent 32%),
+        repeating-linear-gradient(55deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 1px, transparent 1px, transparent 220px),
+        repeating-linear-gradient(55deg, rgba(255,255,255,0.045) 0px, rgba(255,255,255,0.045) 1px, transparent 1px, transparent 360px),
+        linear-gradient(135deg, var(--blue1) 0%, var(--blue2) 45%, var(--blue3) 100%);
+      color: rgba(255,255,255,0.92);
+      padding: 5rem 0 4rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.5rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.92);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.82);
+      max-width: 50rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+      margin-top: 1.75rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      min-height: 3.35rem;
+      padding: 0.85rem 1.2rem;
+      border-radius: 0.9rem;
+      border: 1px solid rgba(255,255,255,0.26);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .button:hover { transform: translateY(-1px); }
+    .button.primary { background: white; color: var(--blue3); border-color: white; }
+    .button.secondary { background: rgba(255,255,255,0.08); }
+
+    .hero-card {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 1.25rem;
+      padding: 1rem;
+      box-shadow: 0 1.2rem 2.8rem rgba(18, 36, 57, 0.18);
+    }
+
+    .phone {
+      background: #ffffff;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      color: #556274;
+      box-shadow: 0 1.5rem 3rem rgba(18, 36, 57, 0.18);
+    }
+
+    .phone-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      color: var(--navy);
+      font-weight: 700;
+    }
+
+    .route-visual {
+      border-radius: 1.2rem;
+      padding: 1rem;
+      background: linear-gradient(180deg, #f4f8fe, #e7f0fb);
+      margin-bottom: 1rem;
+    }
+
+    .mini-map {
+      height: 180px;
+      border-radius: 1rem;
+      background:
+        radial-gradient(circle at 18% 25%, rgba(70,150,229,0.28) 0 7px, transparent 8px),
+        radial-gradient(circle at 78% 72%, rgba(45,187,127,0.25) 0 10px, transparent 11px),
+        linear-gradient(145deg, rgba(70,150,229,0.1), rgba(70,150,229,0.03));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mini-route {
+      position: absolute;
+      inset: 1.2rem 1rem auto 1rem;
+      height: 90px;
+      border: 4px dashed #4696e5;
+      border-color: #4696e5 transparent transparent #4696e5;
+      border-radius: 2.6rem 0 0 0;
+      transform: skewY(-10deg);
+    }
+
+    .checkpoint {
+      position: absolute;
+      right: 1.1rem;
+      bottom: 1rem;
+      width: 1.4rem;
+      height: 1.4rem;
+      border-radius: 0.25rem;
+      background: var(--green);
+      box-shadow: 0 0 0 4px rgba(45,187,127,0.18);
+    }
+
+    .phone-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+
+    .stat {
+      padding: 0.85rem;
+      border-radius: 1rem;
+      background: #f6f9fd;
+      font-size: 0.92rem;
+    }
+
+    .stat strong { display: block; color: var(--navy); font-size: 1.1rem; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 1.5rem;
+      padding: 2rem 0 4rem;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 5.5rem;
+      align-self: start;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 1.25rem;
+      padding: 1rem;
+    }
+
+    .sidebar h3 {
+      font-size: 1rem;
+      margin-bottom: 0.85rem;
+      color: var(--navy);
+    }
+
+    .sidebar button {
+      width: 100%;
+      text-align: left;
+      border: 0;
+      background: transparent;
+      color: #617082;
+      padding: 0.8rem 0.85rem;
+      border-radius: 0.9rem;
+      cursor: pointer;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+      transition: 0.2s ease;
+    }
+
+    .sidebar button:hover,
+    .sidebar button.active {
+      background: white;
+      color: var(--blue3);
+      box-shadow: var(--shadow);
+    }
+
+    .content-panel {
+      min-width: 0;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .section-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 1.25rem;
+      padding: 1.35rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.4rem;
+    }
+
+    .grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .kpi {
+      padding: 1rem;
+      border-radius: 1rem;
+      background: linear-gradient(180deg, #fbfdff, #f4f8fd);
+      border: 1px solid var(--line);
+    }
+
+    .kpi .label { font-size: 0.9rem; color: #728093; }
+    .kpi .value { font-size: 1.7rem; color: var(--navy); font-weight: 700; }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .image-grid img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 1rem;
+      border: 1px solid var(--line);
+    }
+
+    .split-labels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+      color: var(--heading);
+      font-weight: 700;
+    }
+
+    .route-builder {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 1rem;
+    }
+
+    .form-stack > * + * { margin-top: 0.9rem; }
+
+    .control {
+      display: block;
+    }
+
+    .control label {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--navy);
+      font-weight: 700;
+    }
+
+    .control input,
+    .control select {
+      width: 100%;
+      min-height: 3rem;
+      padding: 0.75rem 0.9rem;
+      border: 1px solid #d9e1ea;
+      border-radius: 0.9rem;
+      background: white;
+      color: #4f5a68;
+    }
+
+    .route-output {
+      background: linear-gradient(180deg, #f7fbff, #eef5fc);
+      border: 1px solid #dce7f3;
+      border-radius: 1.2rem;
+      padding: 1rem;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin: 0.75rem 0 1rem;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.5rem 0.75rem;
+      background: white;
+      border: 1px solid #dce7f3;
+      border-radius: 999px;
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 1.1rem;
+    }
+
+    .timeline:before {
+      content: '';
+      position: absolute;
+      left: 0.35rem;
+      top: 0.2rem;
+      bottom: 0.2rem;
+      width: 2px;
+      background: #cfe0f4;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 0 0 1rem 1rem;
+    }
+
+    .timeline-item:before {
+      content: '';
+      position: absolute;
+      left: -0.08rem;
+      top: 0.25rem;
+      width: 0.8rem;
+      height: 0.8rem;
+      border-radius: 50%;
+      background: var(--blue3);
+      box-shadow: 0 0 0 4px rgba(90,167,245,0.15);
+    }
+
+    .business-card,
+    .proposal-card {
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      padding: 1rem;
+      background: white;
+    }
+
+    .business-card .top,
+    .proposal-card .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .badge.green { background: rgba(45,187,127,0.12); color: #1a8f61; }
+    .badge.gold { background: rgba(243,191,76,0.16); color: #996d0b; }
+    .badge.blue { background: rgba(90,167,245,0.14); color: #2c79c8; }
+
+    .mock-app {
+      border-radius: 1.3rem;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    .mock-header {
+      background: linear-gradient(135deg, var(--blue1), var(--blue3));
+      color: white;
+      padding: 1rem;
+    }
+
+    .mock-body { padding: 1rem; }
+
+    .leaderboard li,
+    .clean li {
+      margin-bottom: 0.55rem;
+    }
+
+    .leaderboard {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .leaderboard li {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.8rem 0.9rem;
+      border-radius: 0.9rem;
+      background: #f7fbff;
+      border: 1px solid #e0ebf6;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: #91a0b0;
+      padding: 0.75rem 0 3rem;
+    }
+
+    @media (max-width: 1100px) {
+      .layout,
+      .route-builder,
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .grid.two,
+      .grid.three,
+      .grid.four,
+      .image-grid,
+      .split-labels,
+      .phone-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-inner {
+        padding: 0.75rem 0;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-links { justify-content: flex-start; }
+      .hero { padding-top: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="site-nav">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="brand-mark"><i class="fa-solid fa-route"></i></div>
+        <span>AI Walk-to-Earn Harlem</span>
+      </div>
+      <div class="nav-links">
+        <a class="nav-link active" data-tab="home">Home</a>
+        <a class="nav-link" data-tab="proposal">Proposal</a>
+        <a class="nav-link" data-tab="beforeafter">Before / After</a>
+        <a class="nav-link" data-tab="routes">Routes</a>
+        <a class="nav-link" data-tab="businesses">Businesses</a>
+        <a class="nav-link" data-tab="app">App Demo</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow"><i class="fa-solid fa-sparkles"></i> Functional concept platform</div>
+        <h1>Walk more. Verify visits. Support Harlem businesses.</h1>
+        <p>This interactive website turns the proposal into a working product concept: users can explore the idea, compare before-and-after redesign visuals, preview personalized route generation, understand the business dashboard, and experience a user-friendly mock app flow.</p>
+        <div class="hero-actions">
+          <a class="button primary" data-jump="proposal"><i class="fa-solid fa-file-lines"></i> View Proposal</a>
+          <a class="button secondary" data-jump="app"><i class="fa-solid fa-mobile-screen-button"></i> Try App Demo</a>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="phone">
+          <div class="phone-top">
+            <span>Walk Session Live</span>
+            <span><i class="fa-solid fa-location-dot"></i> Harlem Plaza</span>
+          </div>
+          <div class="route-visual">
+            <div class="mini-map">
+              <div class="mini-route"></div>
+              <div class="checkpoint"></div>
+            </div>
+          </div>
+          <div class="phone-stats">
+            <div class="stat"><strong>12 min</strong> walk verified</div>
+            <div class="stat"><strong>1 checkpoint</strong> until reward</div>
+            <div class="stat"><strong>15% off</strong> at local cafe</div>
+            <div class="stat"><strong>Safe route</strong> shade prioritized</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container layout">
+    <aside class="sidebar">
+      <h3>Platform Sections</h3>
+      <button class="active" data-tab="home">Home</button>
+      <button data-tab="proposal">Proposal</button>
+      <button data-tab="beforeafter">Before / After</button>
+      <button data-tab="routes">Route Builder</button>
+      <button data-tab="businesses">Business Dashboard</button>
+      <button data-tab="app">App Demo</button>
+    </aside>
+
+    <section class="content-panel">
+      <div class="tab-panel active" id="home">
+        <div class="section-card">
+          <h2>Platform Overview</h2>
+          <p>This functional concept website is designed to make the AI Walk-to-Earn Harlem idea feel real and usable. Instead of presenting only static proposal text, the platform organizes the concept into separate tabs for planning, comparison, route personalization, business participation, and the user app experience. The result is a more user-friendly and visually appealing system that communicates how the program would actually work in practice.</p>
+        </div>
+
+        <div class="grid four">
+          <div class="kpi"><div class="label">Active walkers goal</div><div class="value">400+</div></div>
+          <div class="kpi"><div class="label">Participating businesses</div><div class="value">25</div></div>
+          <div class="kpi"><div class="label">Average dwell time</div><div class="value">15 min</div></div>
+          <div class="kpi"><div class="label">Weekly QR scans</div><div class="value">1,200+</div></div>
+        </div>
+
+        <div class="grid two" style="margin-top:1rem;">
+          <div class="section-card">
+            <h3>What the platform achieves</h3>
+            <ul class="clean">
+              <li>Encourages walking with verified routes and reward checkpoints</li>
+              <li>Supports local businesses through measurable foot traffic and coupons</li>
+              <li>Improves the plaza experience through comfort, safety, and destination points</li>
+              <li>Gives stakeholders a clearer picture of how the system works end to end</li>
+            </ul>
+          </div>
+          <div class="section-card">
+            <h3>Core system flow</h3>
+            <div class="timeline">
+              <div class="timeline-item"><strong>User opens app</strong><br>Chooses route length, pace, and reward preference.</div>
+              <div class="timeline-item"><strong>AI builds route</strong><br>Suggests the safest and most engaging path through the plaza.</div>
+              <div class="timeline-item"><strong>User walks + scans QR</strong><br>Landmark checkpoints verify real plaza engagement.</div>
+              <div class="timeline-item"><strong>Reward unlocks</strong><br>Business coupon or points appear instantly in the app.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="proposal">
+        <div class="section-card">
+          <h2>Proposal Home</h2>
+          <p><strong>AI Walk-to-Earn Harlem</strong> is a public-space redesign concept that combines artificial intelligence, verified walking routes, and landmark QR checkpoints to encourage pedestrian activity in Harlem Plaza. The platform rewards users for walking through safe, engaging paths and for visiting small businesses positioned along the route network.</p>
+          <p><strong>Goal:</strong> create a system that improves public health, strengthens community engagement, and helps local businesses benefit from intentional foot traffic. <strong>Essential question:</strong> how can artificial intelligence encourage people to walk more while supporting local businesses in a pedestrian plaza?</p>
+        </div>
+
+        <div class="grid two">
+          <div class="section-card">
+            <h3>The problem</h3>
+            <p>Many pedestrian plazas are used as pass-through spaces rather than destinations. People move through quickly, stay for short periods, and often have little reason to interact with local businesses. This leads to lower engagement, weaker economic spillover, and missed opportunities for community activity.</p>
+            <p>This project responds to those issues by making walking purposeful. Users are not only encouraged to move more, but also guided toward meaningful destinations that benefit both the public space and the local economy.</p>
+          </div>
+          <div class="section-card">
+            <h3>Site / context</h3>
+            <p>The Harlem Plaza site is analyzed through movement patterns, comfort, safety, accessibility, use patterns, and business activity. Direct path behavior suggests that current circulation does not encourage long stays. Areas with shade, seating, and visibility create stronger comfort zones, while nearby businesses offer a real opportunity for checkpoint-based incentives.</p>
+            <p>In this system, landmark placements turn underused corners and business edges into active destinations.</p>
+          </div>
+        </div>
+
+        <div class="grid three">
+          <div class="proposal-card">
+            <div class="top"><h4>Option 1</h4><span class="badge blue">Route reward</span></div>
+            <p>Rewards are tied only to verified walking routes. This improves movement but does not strongly connect users to specific landmarks or businesses.</p>
+          </div>
+          <div class="proposal-card">
+            <div class="top"><h4>Option 2</h4><span class="badge gold">Business check-in</span></div>
+            <p>Users earn rewards by reaching business zones. This supports commerce, but it relies too heavily on proximity instead of full plaza engagement.</p>
+          </div>
+          <div class="proposal-card">
+            <div class="top"><h4>Option 3</h4><span class="badge green">Final choice</span></div>
+            <p>Structured walking routes plus landmark QR scans near businesses provide the strongest verification, the best user experience, and the clearest business value.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="beforeafter">
+        <div class="section-card">
+          <h2>Before / After Gallery</h2>
+          <p>This tab gives the platform a dedicated comparison view so users can clearly understand how the system changes the space. The “before” images show low-engagement conditions or underused areas, while the “after” images visualize AI-guided walking routes, checkpoints, comfort improvements, and stronger small-business integration.</p>
+        </div>
+
+        <div class="split-labels">
+          <div>Before</div>
+          <div>After</div>
+        </div>
+        <div class="image-grid">
+          <img src="image/image1.png" alt="Before image 1">
+          <img src="image/image2.png" alt="After image 1">
+          <img src="image/image3.png" alt="Before image 2">
+          <img src="image/image4.png" alt="After image 2">
+          <img src="image/image5.png" alt="Before image 3">
+          <img src="image/image6.png" alt="After image 3">
+          <img src="image/image7.png" alt="Before image 4">
+          <img src="image/image8.png" alt="After image 4">
+        </div>
+
+        <div class="section-card" style="margin-top:1rem;">
+          <h3>Why this redesign works</h3>
+          <p>The final redesign improves the plaza by turning passive movement into active participation. AI recommends optimized paths based on time, accessibility, shade, crowd levels, and user preferences. QR checkpoints near businesses verify that users truly visited the space, and the reward system makes exploration feel worthwhile instead of accidental.</p>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="routes">
+        <div class="section-card">
+          <h2>Interactive Route Builder</h2>
+          <p>This tab simulates how a real user-friendly version of the platform could generate different walking experiences. The controls below demonstrate how route recommendations can respond to time available, walking pace, accessibility needs, and reward preference.</p>
+        </div>
+
+        <div class="route-builder">
+          <div class="section-card form-stack">
+            <div class="control">
+              <label for="minutes">How long do you have?</label>
+              <select id="minutes">
+                <option value="10">10-minute walk</option>
+                <option value="20" selected>20-minute walk</option>
+                <option value="45">45-minute full loop</option>
+              </select>
+            </div>
+            <div class="control">
+              <label for="pace">Walking mode</label>
+              <select id="pace">
+                <option value="standard" selected>Standard pace</option>
+                <option value="slow">Slow pace / stroller</option>
+                <option value="wheelchair">Wheelchair-friendly</option>
+              </select>
+            </div>
+            <div class="control">
+              <label for="rewardType">Preferred reward</label>
+              <select id="rewardType">
+                <option value="food" selected>Food rewards</option>
+                <option value="retail">Retail discounts</option>
+                <option value="mixed">Mixed rewards</option>
+              </select>
+            </div>
+            <button class="button primary" id="generateRoute" type="button"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate Route</button>
+          </div>
+
+          <div class="route-output">
+            <h3 id="routeTitle">20-Minute Discovery Route</h3>
+            <p id="routeSummary">A balanced route that prioritizes shade, moderate walking distance, and food rewards from businesses at natural pause points.</p>
+            <div class="chips" id="routeChips"></div>
+            <div class="timeline" id="routeTimeline"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="businesses">
+        <div class="section-card">
+          <h2>Business Participation Dashboard</h2>
+          <p>Local businesses are a core part of the platform. This tab models what a participating shop might see: visits, scans, conversion trends, and what kind of promotion tier they are offering. It shows that the project is not just a pedestrian tool, but a measurable economic support system.</p>
+        </div>
+
+        <div class="grid three">
+          <div class="business-card">
+            <div class="top"><h4>Harlem Shake</h4><span class="badge green">Tier 3 Premium</span></div>
+            <p><strong>QR scans this week:</strong> 214</p>
+            <p><strong>Estimated store visits:</strong> 89</p>
+            <p><strong>Top reward:</strong> Free drink with purchase</p>
+            <p><strong>Best time:</strong> 11am–2pm</p>
+          </div>
+          <div class="business-card">
+            <div class="top"><h4>Sylvia's Corner</h4><span class="badge gold">Tier 2 Standard</span></div>
+            <p><strong>QR scans this week:</strong> 176</p>
+            <p><strong>Estimated store visits:</strong> 72</p>
+            <p><strong>Top reward:</strong> 15% off lunch combo</p>
+            <p><strong>Best time:</strong> 12pm–3pm</p>
+          </div>
+          <div class="business-card">
+            <div class="top"><h4>Harlem Books</h4><span class="badge blue">Tier 1 Basic</span></div>
+            <p><strong>QR scans this week:</strong> 121</p>
+            <p><strong>Estimated store visits:</strong> 48</p>
+            <p><strong>Top reward:</strong> 10% off select items</p>
+            <p><strong>Best time:</strong> 4pm–6pm</p>
+          </div>
+        </div>
+
+        <div class="grid two" style="margin-top:1rem;">
+          <div class="section-card">
+            <h3>Why businesses would join</h3>
+            <ul class="clean">
+              <li>Visible weekly scan and visit data</li>
+              <li>Time-of-day insights for promotions</li>
+              <li>Reward tiers based on budget and goals</li>
+              <li>Clearer ROI than traditional marketing guesses</li>
+            </ul>
+          </div>
+          <div class="section-card">
+            <h3>Suggested business tools</h3>
+            <ul class="clean">
+              <li>Upload and manage seasonal promotions</li>
+              <li>Track scan-to-visit conversion rates</li>
+              <li>See route prominence for premium participation</li>
+              <li>Review anonymized foot traffic trends around the plaza</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="app">
+        <div class="section-card">
+          <h2>App Demo Experience</h2>
+          <p>This mock app experience shows how the platform can be functional, intuitive, and visually clear. It demonstrates the real feeling of use: onboarding preferences, live route progress, checkpoint confirmation, and reward unlocks.</p>
+        </div>
+
+        <div class="grid two">
+          <div class="mock-app">
+            <div class="mock-header">
+              <h3 style="color:white; margin:0;">User Journey</h3>
+              <p style="margin:0.35rem 0 0; color:rgba(255,255,255,0.82);">From opening the app to claiming a reward</p>
+            </div>
+            <div class="mock-body">
+              <div class="timeline">
+                <div class="timeline-item"><strong>1. Onboarding</strong><br>User selects time, walking mode, and reward preferences.</div>
+                <div class="timeline-item"><strong>2. Smart route</strong><br>AI recommends a path based on safety, shade, comfort, and checkpoints.</div>
+                <div class="timeline-item"><strong>3. Checkpoint alert</strong><br>The app buzzes when the user gets close to a landmark near a business.</div>
+                <div class="timeline-item"><strong>4. Reward screen</strong><br>QR scan confirms visit and unlocks a coupon or points instantly.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mock-app">
+            <div class="mock-header">
+              <h3 style="color:white; margin:0;">Live Engagement</h3>
+              <p style="margin:0.35rem 0 0; color:rgba(255,255,255,0.82);">Gamification keeps users coming back</p>
+            </div>
+            <div class="mock-body">
+              <ul class="leaderboard">
+                <li><span>Weekly Harlem Leaderboard</span><strong>Top walkers</strong></li>
+                <li><span>1. Maya</span><strong>710 pts</strong></li>
+                <li><span>2. Andre</span><strong>645 pts</strong></li>
+                <li><span>3. Jess</span><strong>598 pts</strong></li>
+              </ul>
+              <div class="chips" style="margin-top:1rem;">
+                <span class="chip"><i class="fa-solid fa-fire"></i> 3-day streak</span>
+                <span class="chip"><i class="fa-solid fa-trophy"></i> Plaza Explorer</span>
+                <span class="chip"><i class="fa-solid fa-store"></i> 4 businesses visited</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="footer-note container">
+    AI Walk-to-Earn Harlem functional concept site.
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('[data-tab]');
+    const panels = document.querySelectorAll('.tab-panel');
+    const sidebarButtons = document.querySelectorAll('.sidebar button');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    function activateTab(tabId) {
+      panels.forEach(panel => panel.classList.toggle('active', panel.id === tabId));
+      sidebarButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId));
+      navLinks.forEach(link => link.classList.toggle('active', link.dataset.tab === tabId));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    tabs.forEach(el => {
+      el.addEventListener('click', () => activateTab(el.dataset.tab));
+    });
+
+    document.querySelectorAll('[data-jump]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        activateTab(el.dataset.jump);
+      });
+    });
+
+    const routeData = {
+      '10-standard-food': {
+        title: '10-Minute Quick Reward Route',
+        summary: 'A short lunchtime path designed for fast completion and one high-likelihood food checkpoint.',
+        chips: ['Fast loop', 'Food reward', 'High visibility'],
+        steps: [
+          'Start at plaza entry near transit stop.',
+          'Walk along primary shaded path for motion verification.',
+          'Scan checkpoint at cafe doorway.',
+          'Unlock 10% off or small drink reward.'
+        ]
+      },
+      '20-standard-food': {
+        title: '20-Minute Discovery Route',
+        summary: 'A balanced route that prioritizes shade, moderate walking distance, and food rewards from businesses at natural pause points.',
+        chips: ['Shade prioritized', '2 checkpoints', 'Food rewards'],
+        steps: [
+          'Begin at the plaza edge and enter the main loop.',
+          'Pass comfort seating zone and landscaped center path.',
+          'Scan checkpoint 1 at local food partner.',
+          'Continue to landmark sign near second business and unlock final reward.'
+        ]
+      },
+      '45-standard-food': {
+        title: '45-Minute Full Plaza Loop',
+        summary: 'A full exploration route for users who want to experience the entire site and collect multiple rewards.',
+        chips: ['Full loop', '3 checkpoints', 'Exploration'],
+        steps: [
+          'Walk the complete plaza perimeter and central lane.',
+          'Visit three QR checkpoints linked to different businesses.',
+          'Receive tiered points for each confirmed stop.',
+          'Unlock a bonus streak reward for full completion.'
+        ]
+      },
+      '20-slow-food': {
+        title: '20-Minute Slow Pace Route',
+        summary: 'A stroller-friendly or elderly-friendly version with longer windows, more seating, and low-pressure checkpoint timing.',
+        chips: ['Slow pace', 'Seating stops', 'Accessible'],
+        steps: [
+          'Begin on the smoothest surface route.',
+          'Pause at seating node before checkpoint alert.',
+          'Scan the business landmark without time pressure.',
+          'Receive reward after easy completion.'
+        ]
+      },
+      '20-wheelchair-food': {
+        title: '20-Minute Wheelchair-Friendly Route',
+        summary: 'An accessible route designed to avoid uneven segments and prioritize wide paths and step-free circulation.',
+        chips: ['Wheelchair-friendly', 'Wide paths', 'Safe surfaces'],
+        steps: [
+          'Start on the primary step-free entrance path.',
+          'Use the widest circulation lane through the plaza.',
+          'Reach accessible checkpoint near storefront edge.',
+          'Unlock food reward with verified route completion.'
+        ]
+      },
+      '20-standard-retail': {
+        title: '20-Minute Retail Route',
+        summary: 'A medium-length route designed to direct users toward shops and retail incentives rather than food stops.',
+        chips: ['Retail focus', '2 shop stops', 'Browsing route'],
+        steps: [
+          'Walk toward the retail edge of the plaza.',
+          'Scan a checkpoint near the bookstore entrance.',
+          'Continue past visual landmark toward second shop.',
+          'Unlock discount offers for participating stores.'
+        ]
+      },
+      '20-standard-mixed': {
+        title: '20-Minute Mixed Reward Route',
+        summary: 'A flexible route that combines one food reward and one retail incentive to broaden user engagement.',
+        chips: ['Mixed rewards', 'Balanced path', '2 checkpoints'],
+        steps: [
+          'Enter the plaza and follow the recommended mixed route.',
+          'Reach a food checkpoint at midpoint.',
+          'Continue to retail-edge landmark for second scan.',
+          'Earn both a coupon and bonus points.'
+        ]
+      }
+    };
+
+    const routeTitle = document.getElementById('routeTitle');
+    const routeSummary = document.getElementById('routeSummary');
+    const routeChips = document.getElementById('routeChips');
+    const routeTimeline = document.getElementById('routeTimeline');
+
+    function renderRoute(data) {
+      routeTitle.textContent = data.title;
+      routeSummary.textContent = data.summary;
+      routeChips.innerHTML = data.chips.map(chip => `<span class="chip"><i class="fa-solid fa-location-dot"></i>${chip}</span>`).join('');
+      routeTimeline.innerHTML = data.steps.map(step => `<div class="timeline-item">${step}</div>`).join('');
+    }
+
+    renderRoute(routeData['20-standard-food']);
+
+    document.getElementById('generateRoute').addEventListener('click', () => {
+      const minutes = document.getElementById('minutes').value;
+      const pace = document.getElementById('pace').value;
+      const rewardType = document.getElementById('rewardType').value;
+      const key = `${minutes}-${pace}-${rewardType}`;
+      renderRoute(routeData[key] || routeData['20-standard-food']);
+    });
+  </script>
+</body>
+</html>
