@@ -32,6 +32,7 @@
       --gold: #f0b74a;
       --red: #eb5757;
       --orange: #ff8d3a;
+      --purple: #8b5cf6;
       --shadow: 0 24px 60px rgba(19, 36, 58, 0.08);
       --radius-xl: 28px;
       --radius-lg: 22px;
@@ -254,6 +255,7 @@
     .button.green { background: var(--green); color: white; }
     .button.soft { background: #edf5ff; color: var(--blue3); }
     .button.warn { background: #fff3ea; color: #c96a11; border: 1px solid #ffd8bb; }
+    .button.purple { background: var(--purple); color: white; }
 
     .hero-panel {
       border-radius: var(--radius-xl);
@@ -321,6 +323,16 @@
       align-items: start;
     }
 
+    .walker-only,
+    .business-only {
+      display: none;
+    }
+
+    body.walker-view .walker-only,
+    body.business-view .business-only {
+      display: block;
+    }
+
     .form-group + .form-group { margin-top: 14px; }
 
     .form-group label {
@@ -343,6 +355,18 @@
       background: white;
       color: #536276;
       outline: none;
+    }
+
+    .verification-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .verification-row .button {
+      flex: 1 1 0;
+      min-width: 160px;
     }
 
     .metric-row {
@@ -378,6 +402,7 @@
     .status.blue { background: #edf5ff; color: #2d7fce; }
     .status.green { background: rgba(36,182,117,0.12); color: #147b52; }
     .status.red { background: rgba(218,109,109,0.12); color: #b44d4d; }
+    .status.purple { background: rgba(139,92,246,0.12); color: #6d3ce7; }
 
     .feed,
     .route-steps,
@@ -397,7 +422,8 @@
     .leaderboard li,
     .dashboard-card,
     .impact-card,
-    .activity-item {
+    .activity-item,
+    .business-kpi {
       background: white;
       border: 1px solid var(--line);
       border-radius: 16px;
@@ -495,6 +521,7 @@
     .badge.gold { background: rgba(240,183,72,0.18); color: #8c6708; }
     .badge.blue { background: rgba(75,152,234,0.14); color: #2d7fce; }
     .badge.orange { background: rgba(255,141,58,0.14); color: #cc6b16; }
+    .badge.purple { background: rgba(139,92,246,0.14); color: #6d3ce7; }
 
     .map-shell {
       background: linear-gradient(180deg, #f9fbff, #eef5fc);
@@ -643,7 +670,7 @@
     }
 
     .login-card {
-      width: min(980px, 100%);
+      width: min(1100px, 100%);
       display: grid;
       grid-template-columns: 1.05fr 0.95fr;
       gap: 18px;
@@ -662,7 +689,6 @@
     }
 
     .login-side {
-      color: var(--navy);
       background:
         radial-gradient(circle at top right, rgba(255,255,255,0.16), transparent 28%),
         linear-gradient(135deg, #7dc7ff 0%, #4b95ff 46%, #2866d6 100%);
@@ -672,6 +698,28 @@
     .login-side h2,
     .login-side h3 {
       color: white;
+    }
+
+    .account-type-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 18px;
+      margin-bottom: 18px;
+    }
+
+    .account-type-card {
+      border-radius: 18px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 14px;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .account-type-card.active {
+      background: rgba(255,255,255,0.22);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.34);
     }
 
     .login-kpis {
@@ -735,6 +783,20 @@
       flex-wrap: wrap;
     }
 
+    .business-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .business-kpi strong {
+      display: block;
+      color: var(--navy);
+      margin-bottom: 4px;
+      font-size: 1.05rem;
+    }
+
     @media (max-width: 1240px) {
       .platform-layout { grid-template-columns: 1fr; }
     }
@@ -746,7 +808,9 @@
       .image-grid,
       .summary-grid,
       .login-card,
-      .login-kpis {
+      .login-kpis,
+      .account-type-grid,
+      .business-kpi-grid {
         grid-template-columns: 1fr;
       }
 
@@ -767,7 +831,8 @@
       .hero { padding-top: 42px; }
       .button-row,
       .hero-actions,
-      .auth-actions {
+      .auth-actions,
+      .verification-row {
         flex-direction: column;
       }
       .button { width: 100%; }
@@ -778,15 +843,26 @@
     }
   </style>
 </head>
-<body>
+<body class="walker-view">
   <div class="login-overlay" id="loginOverlay">
     <div class="login-card">
       <div class="login-side">
-        <div class="hero-badge"><i class="fa-solid fa-lock"></i> Secure user access</div>
+        <div class="hero-badge"><i class="fa-solid fa-lock"></i> Secure role-based access</div>
         <h2>AI Walk-to-Earn Harlem</h2>
-        <p>Sign in to save routes, track rewards, unlock checkpoints, and view your live activity history across the plaza experience.</p>
+        <p>Choose whether you are joining as a walker or as a participating business. Each account type opens into its own tailored platform experience.</p>
 
-        <div class="login-kpis">
+        <div class="account-type-grid">
+          <div class="account-type-card active" id="walkerTypeCard">
+            <h3><i class="fa-solid fa-person-walking"></i> Walker Account</h3>
+            <p style="color:rgba(255,255,255,0.9); margin:0;">Build routes, unlock rewards, track points, and save your walking history.</p>
+          </div>
+          <div class="account-type-card" id="businessTypeCard">
+            <h3><i class="fa-solid fa-store"></i> Business Account</h3>
+            <p style="color:rgba(255,255,255,0.9); margin:0;">View traffic, scans, ROI, route placement, and reward performance for your business.</p>
+          </div>
+        </div>
+
+        <div class="login-kpis" id="loginKpis">
           <div class="login-kpi">
             <strong>Live routes</strong>
             personalized by time, pace, and reward interest
@@ -818,24 +894,43 @@
         </div>
 
         <div class="form-group">
-          <label for="authEmail">Email</label>
+          <label for="authEmail">Email (.com only)</label>
           <input id="authEmail" type="email" placeholder="you@example.com" />
         </div>
 
-        <div class="form-group">
+        <div class="form-group walker-auth-only">
           <label for="authPassword">Password</label>
           <input id="authPassword" type="password" placeholder="Create a password" />
+        </div>
+
+        <div class="form-group business-auth-only hidden">
+          <label for="businessNameInput">Business Name</label>
+          <input id="businessNameInput" type="text" placeholder="Your storefront or organization" />
+        </div>
+
+        <div class="form-group business-auth-only hidden">
+          <label for="businessCategoryInput">Business Category</label>
+          <input id="businessCategoryInput" type="text" placeholder="Cafe, bookstore, pharmacy, retail, restaurant..." />
+        </div>
+
+        <div class="form-group">
+          <label for="verificationCodeInput">Verification Code</label>
+          <input id="verificationCodeInput" type="text" placeholder="Enter 6-digit code" maxlength="6" />
+        </div>
+
+        <div class="verification-row">
+          <button class="button soft" id="sendVerificationCode" type="button"><i class="fa-solid fa-paper-plane"></i> Send Code</button>
+          <button class="button green" id="verifyCodeButton" type="button"><i class="fa-solid fa-shield-check"></i> Verify Email</button>
         </div>
 
         <div class="status blue show" id="authStatus">Create an account or sign in to continue.</div>
 
         <div class="auth-actions">
           <button class="button dark" id="authSubmit"><i class="fa-solid fa-right-to-bracket"></i> Continue</button>
-          <button class="button soft" id="guestLogin"><i class="fa-solid fa-user"></i> Continue as Guest</button>
         </div>
 
-        <div class="auth-note">
-          This version stores account and session data in local browser storage so it behaves more like a real product flow.
+        <div class="auth-note" id="authNote">
+          Walker accounts save route history, points, rewards, and streaks. Business accounts save analytics, scans, projected visits, and reward performance. All accounts require a verified .com email.
         </div>
       </div>
     </div>
@@ -847,12 +942,13 @@
         <div class="brand-mark"><i class="fa-solid fa-route"></i></div>
         <div class="brand-copy">
           <div class="brand-title">AI Walk-to-Earn Harlem</div>
-          <div class="brand-sub">Interactive platform</div>
+          <div class="brand-sub" id="brandSubLabel">Walker platform</div>
         </div>
       </div>
 
       <div class="topbar-right">
         <div class="user-pill" id="currentUserPill"><i class="fa-solid fa-user"></i><span id="currentUserLabel">Guest</span></div>
+        <button class="button soft" id="switchRoleBtn"><i class="fa-solid fa-repeat"></i> Switch Account Type</button>
         <button class="button soft" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log out</button>
       </div>
     </div>
@@ -866,7 +962,7 @@
           Businesses
           <span class="tab-notif" id="businessNotif"></span>
         </button>
-        <button class="tab-btn" data-panel="app" id="appTab">
+        <button class="tab-btn walker-only" data-panel="app" id="appTab">
           App
           <span class="tab-notif" id="appNotif"></span>
         </button>
@@ -877,8 +973,8 @@
   <header class="hero">
     <div class="container hero-grid">
       <div>
-        <div class="hero-badge"><i class="fa-solid fa-sparkles"></i> Logged-in platform experience</div>
-        <h1>AI Walk-to-Earn Harlem Platform</h1>
+        <div class="hero-badge" id="heroRoleBadge"><i class="fa-solid fa-person-walking"></i> Walker account experience</div>
+        <h1 id="heroMainTitle">AI Walk-to-Earn Harlem Platform</h1>
         <div class="hero-preview" id="heroRoutePreview">Current preview: 20-Minute Discovery Route</div>
         <p id="heroDescription">A seamless experience that combines account access, route generation, map navigation, checkpoints, reward unlocking, business participation, and app activity around Montefiore Square.</p>
         <div class="hero-actions">
@@ -890,14 +986,14 @@
       <div class="hero-panel">
         <div class="summary-shell">
           <div class="summary-head">
-            <span>Account Summary</span>
+            <span id="summaryHeadLabel">Account Summary</span>
             <span><i class="fa-solid fa-location-dot"></i> Montefiore Square</span>
           </div>
           <div class="summary-grid">
-            <div class="summary-card"><strong id="heroMetricTime">20 min</strong>route length</div>
-            <div class="summary-card"><strong id="heroMetricMode">Standard</strong>movement mode</div>
-            <div class="summary-card"><strong id="heroMetricReward">Food</strong>reward profile</div>
-            <div class="summary-card"><strong id="heroMetricStops">4 stops</strong>verified checkpoints</div>
+            <div class="summary-card"><strong id="heroMetricTime">20 min</strong><span id="summaryCard1Label">route length</span></div>
+            <div class="summary-card"><strong id="heroMetricMode">Standard</strong><span id="summaryCard2Label">movement mode</span></div>
+            <div class="summary-card"><strong id="heroMetricReward">Food</strong><span id="summaryCard3Label">reward profile</span></div>
+            <div class="summary-card"><strong id="heroMetricStops">4 stops</strong><span id="summaryCard4Label">verified checkpoints</span></div>
           </div>
         </div>
       </div>
@@ -907,11 +1003,11 @@
   <main class="page container">
     <section class="panel active" id="platform">
       <div class="card">
-        <h2>Platform</h2>
-        <p>This version behaves like a real product flow: a signed-in user builds a route, starts a session, reaches checkpoints, unlocks rewards, updates business impact, and stores progress in local account history.</p>
+        <h2 id="platformTitle">Platform</h2>
+        <p id="platformIntro">This version behaves like a real product flow: a signed-in user builds a route, starts a session, reaches checkpoints, unlocks rewards, updates business impact, and stores progress in local account history.</p>
       </div>
 
-      <div class="platform-layout">
+      <div class="platform-layout walker-only">
         <div>
           <div class="card">
             <h3>Route Builder</h3>
@@ -1048,22 +1144,70 @@
           </div>
         </div>
       </div>
+
+      <div class="business-only">
+        <div class="grid two">
+          <div class="card">
+            <h3>Business Dashboard</h3>
+            <p>Your business account is separated from the walker experience. Here you monitor visibility, scans, reward redemption, and return on participation without the walker route-building interface.</p>
+            <div class="status purple show" id="businessAccountNotice">Business account active. Use the Businesses tab for detailed analytics and performance breakdowns.</div>
+            <div class="business-kpi-grid">
+              <div class="business-kpi"><strong id="bizSummaryVisits">214</strong>weekly scans</div>
+              <div class="business-kpi"><strong id="bizSummaryVisits2">89</strong>estimated visits</div>
+              <div class="business-kpi"><strong id="bizSummaryRewards">31</strong>rewards claimed</div>
+              <div class="business-kpi"><strong id="bizSummaryRevenue">$1,340</strong>projected revenue lift</div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Business Account Tools</h3>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-left">
+                  <div class="activity-badge green"><i class="fa-solid fa-chart-line"></i></div>
+                  <div>
+                    <div class="stop-name">Performance analytics</div>
+                    <div class="small-text">Track scans, visits, and conversions across active reward routes.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-left">
+                  <div class="activity-badge green"><i class="fa-solid fa-ticket"></i></div>
+                  <div>
+                    <div class="stop-name">Reward controls</div>
+                    <div class="small-text">Evaluate which incentives drive the strongest participation.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-left">
+                  <div class="activity-badge green"><i class="fa-solid fa-location-dot"></i></div>
+                  <div>
+                    <div class="stop-name">Route placement</div>
+                    <div class="small-text">See how often your location appears in walker journeys.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="panel" id="proposal">
       <div class="card">
         <h2>Proposal</h2>
-        <p><strong>AI Walk-to-Earn Harlem</strong> is a public-space activation platform designed to increase pedestrian movement, support small businesses, and improve the experience around Montefiore Square. It combines route personalization, account-based progress, walking verification, checkpoints, and reward systems in one unified flow.</p>
+        <p><strong>AI Walk-to-Earn Harlem</strong> is a public-space activation platform designed to increase pedestrian movement, support small businesses, and improve the experience around Montefiore Square. It combines route personalization, account-based progress, walking verification, checkpoints, and reward systems in one unified flow while also separating walker and business account experiences.</p>
       </div>
 
       <div class="grid two">
         <div class="card">
           <h3>Project Overview</h3>
-          <p>The platform rewards users for walking along recommended routes, reaching checkpoints near businesses, and verifying those visits through QR-style interactions. The goal is to transform the space from a pass-through corridor into an active public destination with measurable participation.</p>
+          <p>The platform rewards users for walking along recommended routes, reaching checkpoints near businesses, and verifying those visits through QR-style interactions. Business accounts gain a separate analytics environment focused on participation and performance instead of walker progression.</p>
         </div>
         <div class="card">
           <h3>Problem Definition</h3>
-          <p>Many public spaces do not create strong reasons to stay, explore, or support nearby stores. This platform responds by making movement visible, measurable, and directly tied to local business participation and user account progress.</p>
+          <p>Many public spaces do not create strong reasons to stay, explore, or support nearby stores. This platform responds by making movement visible, measurable, and directly tied to local business participation while giving each user type a role-specific interface.</p>
         </div>
       </div>
 
@@ -1074,7 +1218,7 @@
         </div>
         <div class="card">
           <h3>Final Proposal</h3>
-          <p>The chosen direction combines route guidance, real business checkpoints, account-based saved progress, reward personalization, and a trackable user journey. Businesses gain measurable participation data while users gain a richer urban walking experience.</p>
+          <p>The chosen direction combines route guidance, real business checkpoints, account-based saved progress, separate walker and business logins, reward personalization, and a trackable user journey. Walkers and businesses each see what is most relevant to them.</p>
         </div>
       </div>
     </section>
@@ -1105,7 +1249,7 @@
     <section class="panel" id="businesses">
       <div class="card">
         <h2>Businesses</h2>
-        <p>This view shows how participating businesses could see performance, route visibility, and expected outcomes. Switch between stores to compare how the platform supports different business types.</p>
+        <p id="businessesIntro">This view shows how participating businesses could see performance, route visibility, and expected outcomes. Switch between stores to compare how the platform supports different business types.</p>
         <div class="status blue" id="businessGuide"></div>
         <div class="store-filter">
           <button class="filter-btn active" data-store="shake">Harlem Shake</button>
@@ -1123,8 +1267,8 @@
       <div class="grid two" style="margin-top:16px;">
         <div class="card" id="businessInsight"></div>
         <div class="card">
-          <h3>Business Value</h3>
-          <ul>
+          <h3 id="businessValueTitle">Business Value</h3>
+          <ul id="businessValueList">
             <li>Track scans, visits, and time-of-day demand</li>
             <li>Choose reward tiers based on budget and goals</li>
             <li>Appear more often on recommended routes through premium placement</li>
@@ -1134,7 +1278,7 @@
       </div>
     </section>
 
-    <section class="panel" id="app">
+    <section class="panel walker-only" id="app">
       <div class="card">
         <h2>App</h2>
         <p>This tab simulates the user-facing app layer with alerts, scans, reward accumulation, and account activity continuity.</p>
@@ -1188,9 +1332,11 @@
   <script>
     const STORAGE_KEYS = {
       auth: "aiwalk_auth",
-      profile: "aiwalk_profile",
-      history: "aiwalk_history",
-      stats: "aiwalk_stats"
+      walker_profile: "aiwalk_walker_profile",
+      walker_history: "aiwalk_walker_history",
+      walker_stats: "aiwalk_walker_stats",
+      business_profile: "aiwalk_business_profile",
+      business_stats: "aiwalk_business_stats"
     };
 
     const START_POINT = { lat: 40.82094, lng: -73.94952 };
@@ -1417,34 +1563,169 @@
     const loginModeBtn = document.getElementById("loginModeBtn");
     const signupModeBtn = document.getElementById("signupModeBtn");
     const authSubmit = document.getElementById("authSubmit");
-    const guestLogin = document.getElementById("guestLogin");
     const authName = document.getElementById("authName");
     const authEmail = document.getElementById("authEmail");
     const authPassword = document.getElementById("authPassword");
     const authStatus = document.getElementById("authStatus");
     const currentUserLabel = document.getElementById("currentUserLabel");
     const logoutBtn = document.getElementById("logoutBtn");
+    const switchRoleBtn = document.getElementById("switchRoleBtn");
+    const walkerTypeCard = document.getElementById("walkerTypeCard");
+    const businessTypeCard = document.getElementById("businessTypeCard");
+    const businessNameInput = document.getElementById("businessNameInput");
+    const businessCategoryInput = document.getElementById("businessCategoryInput");
+    const authNote = document.getElementById("authNote");
+    const loginKpis = document.getElementById("loginKpis");
+    const brandSubLabel = document.getElementById("brandSubLabel");
+    const heroRoleBadge = document.getElementById("heroRoleBadge");
+    const summaryHeadLabel = document.getElementById("summaryHeadLabel");
+    const summaryCard1Label = document.getElementById("summaryCard1Label");
+    const summaryCard2Label = document.getElementById("summaryCard2Label");
+    const summaryCard3Label = document.getElementById("summaryCard3Label");
+    const summaryCard4Label = document.getElementById("summaryCard4Label");
+    const platformTitle = document.getElementById("platformTitle");
+    const platformIntro = document.getElementById("platformIntro");
+    const businessesIntro = document.getElementById("businessesIntro");
+    const businessValueTitle = document.getElementById("businessValueTitle");
+    const verificationCodeInput = document.getElementById("verificationCodeInput");
+    const sendVerificationCode = document.getElementById("sendVerificationCode");
+    const verifyCodeButton = document.getElementById("verifyCodeButton");
 
     let authMode = "login";
+    let accountType = "walker";
+    let generatedVerificationCode = "";
+    let verifiedEmail = false;
+    let verifiedEmailValue = "";
+    let verifiedRole = "";
+
+    function isValidComEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.com$/i.test(email);
+    }
+
+    function resetVerificationState() {
+      generatedVerificationCode = "";
+      verifiedEmail = false;
+      verifiedEmailValue = "";
+      verifiedRole = "";
+      verificationCodeInput.value = "";
+    }
+
+    authEmail.addEventListener("input", resetVerificationState);
+
+    function updateAccountTypeUI() {
+      walkerTypeCard.classList.toggle("active", accountType === "walker");
+      businessTypeCard.classList.toggle("active", accountType === "business");
+
+      document.querySelectorAll(".walker-auth-only").forEach(el => {
+        el.classList.toggle("hidden", accountType !== "walker");
+      });
+
+      document.querySelectorAll(".business-auth-only").forEach(el => {
+        el.classList.toggle("hidden", accountType !== "business");
+      });
+
+      resetVerificationState();
+
+      if (accountType === "walker") {
+        authNote.textContent = "Walker accounts save route history, points, rewards, and streaks. All walker accounts require a verified .com email.";
+        authStatus.className = "status blue show";
+        authStatus.textContent = authMode === "login"
+          ? "Sign in as a walker with a verified .com email."
+          : "Create a walker account with a verified .com email.";
+
+        loginKpis.innerHTML = `
+          <div class="login-kpi"><strong>Live routes</strong>personalized by time, pace, and reward interest</div>
+          <div class="login-kpi"><strong>Checkpoint rewards</strong>synced with business participation and app activity</div>
+          <div class="login-kpi"><strong>Saved progress</strong>stored locally so the platform feels like a real product</div>
+          <div class="login-kpi"><strong>User dashboard</strong>with route history, points, streaks, and milestones</div>
+        `;
+      } else {
+        authNote.textContent = "Business accounts save analytics, scans, projected visits, and reward performance. All business accounts require a verified .com email.";
+        authStatus.className = "status purple show";
+        authStatus.textContent = authMode === "login"
+          ? "Sign in as a business with a verified .com email."
+          : "Create a business account with a verified .com email.";
+
+        loginKpis.innerHTML = `
+          <div class="login-kpi"><strong>Business analytics</strong>measure scans, estimated visits, and reward conversions</div>
+          <div class="login-kpi"><strong>Route visibility</strong>see how often your storefront appears on walker routes</div>
+          <div class="login-kpi"><strong>Reward performance</strong>identify which offers drive the strongest engagement</div>
+          <div class="login-kpi"><strong>ROI tracking</strong>monitor projected revenue lift and participation trends</div>
+        `;
+      }
+    }
+
+    walkerTypeCard.addEventListener("click", () => {
+      accountType = "walker";
+      updateAccountTypeUI();
+    });
+
+    businessTypeCard.addEventListener("click", () => {
+      accountType = "business";
+      updateAccountTypeUI();
+    });
 
     function setAuthMode(mode) {
       authMode = mode;
       loginModeBtn.classList.toggle("active", mode === "login");
       signupModeBtn.classList.toggle("active", mode === "signup");
       authName.parentElement.classList.toggle("hidden", mode === "login");
-      authStatus.className = "status blue show";
-      authStatus.textContent = mode === "login"
-        ? "Sign in with an existing email or continue as guest."
-        : "Create an account to save your routes and rewards.";
+      updateAccountTypeUI();
     }
 
     loginModeBtn.addEventListener("click", () => setAuthMode("login"));
     signupModeBtn.addEventListener("click", () => setAuthMode("signup"));
 
-    function ensureDefaultStats() {
-      const stats = safeRead(STORAGE_KEYS.stats, null);
-      if (!stats) {
-        safeWrite(STORAGE_KEYS.stats, {
+    sendVerificationCode.addEventListener("click", () => {
+      const email = authEmail.value.trim();
+
+      if (!isValidComEmail(email)) {
+        authStatus.className = "status red show";
+        authStatus.textContent = "Please enter a valid .com email before requesting a verification code.";
+        return;
+      }
+
+      generatedVerificationCode = String(Math.floor(100000 + Math.random() * 900000));
+      verifiedEmail = false;
+      verifiedEmailValue = "";
+      verifiedRole = "";
+      authStatus.className = "status blue show";
+      authStatus.textContent = `Verification code generated for ${email}. Use code: ${generatedVerificationCode}`;
+    });
+
+    verifyCodeButton.addEventListener("click", () => {
+      const email = authEmail.value.trim();
+      const enteredCode = verificationCodeInput.value.trim();
+
+      if (!generatedVerificationCode) {
+        authStatus.className = "status red show";
+        authStatus.textContent = "Send a verification code first.";
+        return;
+      }
+
+      if (!isValidComEmail(email)) {
+        authStatus.className = "status red show";
+        authStatus.textContent = "Verification requires a valid .com email.";
+        return;
+      }
+
+      if (enteredCode !== generatedVerificationCode) {
+        authStatus.className = "status red show";
+        authStatus.textContent = "Incorrect verification code.";
+        return;
+      }
+
+      verifiedEmail = true;
+      verifiedEmailValue = email.toLowerCase();
+      verifiedRole = accountType;
+      authStatus.className = "status green show";
+      authStatus.textContent = `${email} verified successfully for the ${accountType} account type.`;
+    });
+
+    function ensureDefaultStorage() {
+      const walkerStats = safeRead(STORAGE_KEYS.walker_stats, null);
+      if (!walkerStats) {
+        safeWrite(STORAGE_KEYS.walker_stats, {
           totalPoints: 0,
           totalStops: 0,
           claimedRewards: 0,
@@ -1452,72 +1733,204 @@
           sessions: 0
         });
       }
-      const history = safeRead(STORAGE_KEYS.history, null);
-      if (!history) safeWrite(STORAGE_KEYS.history, []);
+
+      const walkerHistory = safeRead(STORAGE_KEYS.walker_history, null);
+      if (!walkerHistory) safeWrite(STORAGE_KEYS.walker_history, []);
+
+      const businessStats = safeRead(STORAGE_KEYS.business_stats, null);
+      if (!businessStats) {
+        safeWrite(STORAGE_KEYS.business_stats, {
+          weeklyScans: 214,
+          estimatedVisits: 89,
+          claimedRewards: 31,
+          projectedRevenue: 1340
+        });
+      }
+    }
+
+    function applyRoleView(role) {
+      document.body.classList.toggle("walker-view", role === "walker");
+      document.body.classList.toggle("business-view", role === "business");
+
+      brandSubLabel.textContent = role === "walker" ? "Walker platform" : "Business platform";
+      heroRoleBadge.innerHTML = role === "walker"
+        ? '<i class="fa-solid fa-person-walking"></i> Walker account experience'
+        : '<i class="fa-solid fa-store"></i> Business account experience';
+
+      heroMainTitle.textContent = role === "walker"
+        ? "AI Walk-to-Earn Harlem Platform"
+        : "AI Walk-to-Earn Harlem Business Portal";
+
+      summaryHeadLabel.textContent = role === "walker" ? "Account Summary" : "Business Summary";
+      summaryCard1Label.textContent = role === "walker" ? "route length" : "active scan volume";
+      summaryCard2Label.textContent = role === "walker" ? "movement mode" : "business mode";
+      summaryCard3Label.textContent = role === "walker" ? "reward profile" : "reward category";
+      summaryCard4Label.textContent = role === "walker" ? "verified checkpoints" : "projected visits";
+
+      platformTitle.textContent = role === "walker" ? "Platform" : "Business Platform";
+      platformIntro.textContent = role === "walker"
+        ? "This version behaves like a real product flow: a signed-in user builds a route, starts a session, reaches checkpoints, unlocks rewards, updates business impact, and stores progress in local account history."
+        : "This version behaves like a real business portal: a signed-in storefront or organization monitors scans, route visibility, rewards, and projected return without entering the walker session experience.";
+
+      businessesIntro.textContent = role === "walker"
+        ? "This view shows how participating businesses could see performance, route visibility, and expected outcomes. Switch between stores to compare how the platform supports different business types."
+        : "This is your core business analytics view. Compare performance snapshots, reward conversion, route visibility, and projected revenue outcomes across participating storefront models.";
+
+      businessValueTitle.textContent = role === "walker" ? "Business Value" : "Business Account Value";
+
+      if (role === "business") {
+        const stats = safeRead(STORAGE_KEYS.business_stats, {
+          weeklyScans: 214,
+          estimatedVisits: 89,
+          claimedRewards: 31,
+          projectedRevenue: 1340
+        });
+        heroMetricTime.textContent = `${stats.weeklyScans}`;
+        heroMetricMode.textContent = "Business";
+        heroMetricReward.textContent = "Store offers";
+        heroMetricStops.textContent = `${stats.estimatedVisits} visits`;
+        heroRoutePreview.textContent = "Current view: Business Analytics Overview";
+        heroDescription.textContent = "A business-facing portal for monitoring route inclusion, scan activity, projected visits, reward uptake, and return on participation around Montefiore Square.";
+      } else {
+        renderRouteConfig(currentConfigKey);
+      }
     }
 
     function updateUserUI() {
-      const profile = safeRead(STORAGE_KEYS.profile, { name: "Guest" });
-      currentUserLabel.textContent = profile.name || "Guest";
+      const auth = safeRead(STORAGE_KEYS.auth, null);
+      if (!auth) return;
+
+      if (auth.role === "walker") {
+        const profile = safeRead(STORAGE_KEYS.walker_profile, { name: "Walker" });
+        currentUserLabel.textContent = `${profile.name} · Walker`;
+      } else {
+        const profile = safeRead(STORAGE_KEYS.business_profile, { businessName: "Business" });
+        currentUserLabel.textContent = `${profile.businessName} · Business`;
+      }
     }
 
     function openApp() {
       loginOverlay.classList.add("hidden");
-      ensureDefaultStats();
+      ensureDefaultStorage();
       updateUserUI();
+      const auth = safeRead(STORAGE_KEYS.auth, null);
+      applyRoleView(auth?.role || "walker");
       renderAccountHistory();
       updateGamificationFromStorage();
+      renderBusinessDashboardSummary();
     }
 
-    function completeAuth(profile) {
-      safeWrite(STORAGE_KEYS.auth, { loggedIn: true });
-      safeWrite(STORAGE_KEYS.profile, profile);
+    function completeAuth(role, profile) {
+      safeWrite(STORAGE_KEYS.auth, { loggedIn: true, role });
+      if (role === "walker") {
+        safeWrite(STORAGE_KEYS.walker_profile, profile);
+      } else {
+        safeWrite(STORAGE_KEYS.business_profile, profile);
+      }
       openApp();
     }
 
     authSubmit.addEventListener("click", () => {
-      const email = authEmail.value.trim();
-      const password = authPassword.value.trim();
+      const email = authEmail.value.trim().toLowerCase();
 
-      if (!email || !password) {
+      if (!isValidComEmail(email)) {
         authStatus.className = "status red show";
-        authStatus.textContent = "Email and password are required.";
+        authStatus.textContent = "Only verified .com emails are allowed.";
         return;
       }
 
-      if (authMode === "signup") {
-        const name = authName.value.trim();
-        if (!name) {
-          authStatus.className = "status red show";
-          authStatus.textContent = "Please enter your name.";
-          return;
-        }
-        completeAuth({ name, email, type: "account" });
-      } else {
-        const existing = safeRead(STORAGE_KEYS.profile, null);
-        if (existing && existing.email && existing.email !== email) {
-          authStatus.className = "status red show";
-          authStatus.textContent = "This browser already has a different saved account. Use that email or continue as guest.";
-          return;
-        }
-        completeAuth({
-          name: existing?.name || email.split("@")[0],
-          email,
-          type: "account"
-        });
+      if (!verifiedEmail || verifiedEmailValue !== email || verifiedRole !== accountType) {
+        authStatus.className = "status red show";
+        authStatus.textContent = "You must verify this .com email for the selected account type before continuing.";
+        return;
       }
-    });
 
-    guestLogin.addEventListener("click", () => {
-      completeAuth({ name: "Guest Walker", email: "guest@local.app", type: "guest" });
+      if (accountType === "walker") {
+        const password = authPassword.value.trim();
+        if (!password) {
+          authStatus.className = "status red show";
+          authStatus.textContent = "Password is required.";
+          return;
+        }
+
+        if (authMode === "signup") {
+          const name = authName.value.trim();
+          if (!name) {
+            authStatus.className = "status red show";
+            authStatus.textContent = "Please enter your name.";
+            return;
+          }
+          completeAuth("walker", { name, email, type: "walker" });
+        } else {
+          const existing = safeRead(STORAGE_KEYS.walker_profile, null);
+          if (existing && existing.email && existing.email !== email) {
+            authStatus.className = "status red show";
+            authStatus.textContent = "This browser already has a different saved walker account.";
+            return;
+          }
+          completeAuth("walker", {
+            name: existing?.name || email.split("@")[0],
+            email,
+            type: "walker"
+          });
+        }
+      } else {
+        if (authMode === "signup") {
+          const name = authName.value.trim();
+          const businessName = businessNameInput.value.trim();
+          const category = businessCategoryInput.value.trim();
+
+          if (!name || !businessName || !category) {
+            authStatus.className = "status red show";
+            authStatus.textContent = "Business owner name, business name, and category are required.";
+            return;
+          }
+
+          completeAuth("business", {
+            ownerName: name,
+            email,
+            businessName,
+            category,
+            type: "business"
+          });
+        } else {
+          const existing = safeRead(STORAGE_KEYS.business_profile, null);
+          if (existing && existing.email && existing.email !== email) {
+            authStatus.className = "status red show";
+            authStatus.textContent = "This browser already has a different saved business account.";
+            return;
+          }
+
+          completeAuth("business", {
+            ownerName: existing?.ownerName || email.split("@")[0],
+            email,
+            businessName: existing?.businessName || "Your Business",
+            category: existing?.category || "Retail",
+            type: "business"
+          });
+        }
+      }
     });
 
     logoutBtn.addEventListener("click", () => {
       localStorage.removeItem(STORAGE_KEYS.auth);
       loginOverlay.classList.remove("hidden");
+      resetVerificationState();
       authStatus.className = "status blue show";
       authStatus.textContent = "Signed out. Sign back in to continue.";
     });
+
+    switchRoleBtn.addEventListener("click", () => {
+      loginOverlay.classList.remove("hidden");
+      const current = safeRead(STORAGE_KEYS.auth, null);
+      accountType = current?.role === "walker" ? "business" : "walker";
+      setAuthMode("login");
+      updateAccountTypeUI();
+      authStatus.className = "status blue show";
+      authStatus.textContent = `Switch to a ${accountType} account to continue. Verify your .com email before signing in.`;
+    });
+
+    updateAccountTypeUI();
 
     const existingAuth = safeRead(STORAGE_KEYS.auth, null);
     if (existingAuth?.loggedIn) {
@@ -1556,16 +1969,36 @@
     }
 
     function openPanel(id) {
-      panels.forEach(panel => panel.classList.toggle("active", panel.id === id));
-      tabButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.panel === id));
+      const auth = safeRead(STORAGE_KEYS.auth, { role: "walker" });
+      if (auth.role === "business" && id === "app") return;
+
+      panels.forEach(panel => {
+        if (auth.role === "business" && panel.id === "app") {
+          panel.classList.remove("active");
+        } else {
+          panel.classList.toggle("active", panel.id === id);
+        }
+      });
+
+      tabButtons.forEach(btn => {
+        if (auth.role === "business" && btn.dataset.panel === "app") {
+          btn.classList.remove("active");
+        } else {
+          btn.classList.toggle("active", btn.dataset.panel === id);
+        }
+      });
+
       window.scrollTo({ top: 0, behavior: "smooth" });
 
       if (id === "businesses") {
         clearTabNotification("businesses");
-        showGuide("businesses", "New checkpoint data is available here. Review updated store impact, route visibility, and reward performance below.");
+        showGuide("businesses", auth.role === "walker"
+          ? "New checkpoint data is available here. Review updated store impact, route visibility, and reward performance below."
+          : "This is your primary business analytics space. Review updated scans, route inclusion, reward performance, and projected returns."
+        );
       }
 
-      if (id === "app") {
+      if (id === "app" && auth.role === "walker") {
         clearTabNotification("app");
         showGuide("app", "New checkpoint activity is available here. Trigger the alert or scan interaction below to preview what the user would now see.");
       }
@@ -1576,6 +2009,7 @@
       btn.addEventListener("click", () => openPanel(btn.dataset.openPanel));
     });
 
+    const heroMainTitle = document.getElementById("heroMainTitle");
     const heroRoutePreview = document.getElementById("heroRoutePreview");
     const heroDescription = document.getElementById("heroDescription");
     const heroMetricTime = document.getElementById("heroMetricTime");
@@ -1610,12 +2044,17 @@
     const claimedRewards = document.getElementById("claimedRewards");
     const userRank = document.getElementById("userRank");
 
+    const bizSummaryVisits = document.getElementById("bizSummaryVisits");
+    const bizSummaryVisits2 = document.getElementById("bizSummaryVisits2");
+    const bizSummaryRewards = document.getElementById("bizSummaryRewards");
+    const bizSummaryRevenue = document.getElementById("bizSummaryRevenue");
+
     const map = L.map("leafletMap", {
       zoomControl: true,
       scrollWheelZoom: true
     }).setView([40.82155, -73.9487], 19);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{y}.png".replace("{y}", "{y}"), {
       maxZoom: 20,
       attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map);
@@ -1772,7 +2211,10 @@
     }
 
     function renderAccountHistory() {
-      const history = safeRead(STORAGE_KEYS.history, []);
+      const auth = safeRead(STORAGE_KEYS.auth, { role: "walker" });
+      if (auth.role !== "walker") return;
+
+      const history = safeRead(STORAGE_KEYS.walker_history, []);
       if (!history.length) {
         activityList.innerHTML = `
           <div class="activity-item">
@@ -1805,7 +2247,7 @@
     }
 
     function updateGamificationFromStorage() {
-      const stats = safeRead(STORAGE_KEYS.stats, {
+      const stats = safeRead(STORAGE_KEYS.walker_stats, {
         totalPoints: 0,
         totalStops: 0,
         claimedRewards: 0,
@@ -1819,16 +2261,37 @@
       userRank.textContent = stats.totalPoints > 600 ? "#4" : stats.totalPoints > 300 ? "#7" : stats.totalPoints > 0 ? "#12" : "#—";
     }
 
+    function renderBusinessDashboardSummary() {
+      const stats = safeRead(STORAGE_KEYS.business_stats, {
+        weeklyScans: 214,
+        estimatedVisits: 89,
+        claimedRewards: 31,
+        projectedRevenue: 1340
+      });
+
+      bizSummaryVisits.textContent = `${stats.weeklyScans}`;
+      bizSummaryVisits2.textContent = `${stats.estimatedVisits}`;
+      bizSummaryRewards.textContent = `${stats.claimedRewards}`;
+      bizSummaryRevenue.textContent = `$${stats.projectedRevenue.toLocaleString()}`;
+    }
+
     function saveCompletedSession() {
       if (totalPoints <= 0) return;
 
-      const history = safeRead(STORAGE_KEYS.history, []);
-      const stats = safeRead(STORAGE_KEYS.stats, {
+      const history = safeRead(STORAGE_KEYS.walker_history, []);
+      const stats = safeRead(STORAGE_KEYS.walker_stats, {
         totalPoints: 0,
         totalStops: 0,
         claimedRewards: 0,
         streak: 0,
         sessions: 0
+      });
+
+      const businessStats = safeRead(STORAGE_KEYS.business_stats, {
+        weeklyScans: 214,
+        estimatedVisits: 89,
+        claimedRewards: 31,
+        projectedRevenue: 1340
       });
 
       const date = new Date();
@@ -1841,20 +2304,30 @@
       };
 
       history.unshift(item);
-      safeWrite(STORAGE_KEYS.history, history.slice(0, 20));
+      safeWrite(STORAGE_KEYS.walker_history, history.slice(0, 20));
 
       stats.totalPoints += totalPoints;
       stats.totalStops += totalScans;
       stats.claimedRewards += totalScans;
       stats.sessions += 1;
       stats.streak = Math.max(1, Math.min(30, stats.streak + 1));
-      safeWrite(STORAGE_KEYS.stats, stats);
+      safeWrite(STORAGE_KEYS.walker_stats, stats);
+
+      businessStats.weeklyScans += totalScans;
+      businessStats.estimatedVisits += Math.max(1, Math.round(totalScans * 0.4));
+      businessStats.claimedRewards += totalScans;
+      businessStats.projectedRevenue += totalScans * 18;
+      safeWrite(STORAGE_KEYS.business_stats, businessStats);
 
       renderAccountHistory();
       updateGamificationFromStorage();
+      renderBusinessDashboardSummary();
     }
 
     function resetSession() {
+      const auth = safeRead(STORAGE_KEYS.auth, { role: "walker" });
+      if (auth.role !== "walker") return;
+
       sessionStarted = false;
       currentStep = 0;
       totalPoints = 0;
@@ -1909,6 +2382,9 @@
     }
 
     function handleStopClick(index) {
+      const auth = safeRead(STORAGE_KEYS.auth, { role: "walker" });
+      if (auth.role !== "walker") return;
+
       const stop = currentStops[index];
 
       if (!sessionStarted) {
@@ -1990,6 +2466,7 @@
     }
 
     document.getElementById("buildRoute").addEventListener("click", () => {
+      if (safeRead(STORAGE_KEYS.auth, { role: "walker" }).role !== "walker") return;
       renderRouteConfig(getSelectedConfigKey());
       resetSession();
       mainNotice.className = "status blue show";
@@ -1998,6 +2475,7 @@
 
     ["minutes", "pace", "rewardType"].forEach(id => {
       document.getElementById(id).addEventListener("change", () => {
+        if (safeRead(STORAGE_KEYS.auth, { role: "walker" }).role !== "walker") return;
         renderRouteConfig(getSelectedConfigKey());
         resetSession();
         mainNotice.className = "status blue show";
@@ -2006,6 +2484,7 @@
     });
 
     document.getElementById("startWalk").addEventListener("click", () => {
+      if (safeRead(STORAGE_KEYS.auth, { role: "walker" }).role !== "walker") return;
       sessionStarted = true;
       updateStopCardStates();
       mainNotice.className = "status green show";
@@ -2014,6 +2493,7 @@
     });
 
     document.getElementById("resetWalk").addEventListener("click", () => {
+      if (safeRead(STORAGE_KEYS.auth, { role: "walker" }).role !== "walker") return;
       renderRouteConfig(currentConfigKey);
       resetSession();
     });
@@ -2182,7 +2662,7 @@
     resetSession();
     renderAccountHistory();
     updateGamificationFromStorage();
+    renderBusinessDashboardSummary();
   </script>
 </body>
 </html>
-
