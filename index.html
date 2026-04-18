@@ -1717,35 +1717,26 @@
 
     sendVerificationCode.addEventListener("click", async () => {
       const email = authEmail.value.trim().toLowerCase();
-      const password = authPassword.value.trim() || "TempPass123!";
 
       if (!isValidComEmail(email)) {
         authStatus.className = "status red show";
-        authStatus.textContent = "Please enter a valid .com email before sending a verification email.";
+        authStatus.textContent = "Please enter a valid .com email.";
+        return;
+      }
+
+      if (!auth.currentUser) {
+        authStatus.className = "status red show";
+        authStatus.textContent = "Create your account first, then verify.";
         return;
       }
 
       try {
-        if (authMode === "signup") {
-          const tempUser = await createUserWithEmailAndPassword(auth, email, password);
-          await sendEmailVerification(tempUser.user);
-          authStatus.className = "status blue show";
-          authStatus.textContent = `Verification email sent to ${email}. Open your inbox, click the verification link, then press Verify Email.`;
-        } else {
-          const signInResult = await signInWithEmailAndPassword(auth, email, password);
-          if (!signInResult.user.emailVerified) {
-            await sendEmailVerification(signInResult.user);
-            authStatus.className = "status blue show";
-            authStatus.textContent = `Verification email sent to ${email}. Open your inbox, click the verification link, then press Verify Email.`;
-          } else {
-            authStatus.className = "status green show";
-            authStatus.textContent = `${email} is already verified.`;
-            verifiedForCurrentEntry = true;
-          }
-        }
+        await sendEmailVerification(auth.currentUser);
+        authStatus.className = "status blue show";
+        authStatus.textContent = `Verification email sent to ${email}. Check inbox/spam.`;
       } catch (error) {
         authStatus.className = "status red show";
-        authStatus.textContent = error.message || "Unable to send verification email.";
+        authStatus.textContent = error.message;
       }
     });
 
@@ -1823,45 +1814,51 @@
 
     authSubmit.addEventListener("click", async () => {
       const email = authEmail.value.trim().toLowerCase();
+      const password = authPassword.value.trim();
 
       if (!isValidComEmail(email)) {
         authStatus.className = "status red show";
-        authStatus.textContent = "Only verified .com emails are allowed.";
-        return;
-      }
-
-      if (!verifiedForCurrentEntry) {
-        authStatus.className = "status red show";
-        authStatus.textContent = "You must verify your email through the link sent to your inbox before continuing.";
+        authStatus.textContent = "Only .com emails allowed.";
         return;
       }
 
       try {
-        if (accountType === "walker") {
-          const password = authPassword.value.trim();
+        let userCred;
+
+        if (authMode === "signup") {
           if (!password) {
             authStatus.className = "status red show";
-            authStatus.textContent = "Password is required.";
+            authStatus.textContent = "Password required.";
             return;
           }
 
-          if (authMode === "signup") {
-            const name = authName.value.trim();
-            if (!name) {
-              authStatus.className = "status red show";
-              authStatus.textContent = "Please enter your name.";
-              return;
-            }
+          userCred = await createUserWithEmailAndPassword(auth, email, password);
 
-            const userCred = auth.currentUser ? { user: auth.currentUser } : await createUserWithEmailAndPassword(auth, email, password);
-            await userCred.user.reload();
-            if (!userCred.user.emailVerified) {
-              authStatus.className = "status red show";
-              authStatus.textContent = "Your email still is not verified. Please check your inbox.";
-              return;
-            }
-            currentUserRole = "walker";
-            await ensureUserDoc("walker", userCred.user, { name });
+          authStatus.className = "status blue show";
+          authStatus.textContent = "Account created. Now click 'Send Code' to verify your email.";
+          return;
+        } else {
+          userCred = await signInWithEmailAndPassword(auth, email, password);
+        }
+
+        await userCred.user.reload();
+
+        if (!userCred.user.emailVerified) {
+          authStatus.className = "status red show";
+          authStatus.textContent = "Email not verified. Click 'Send Code'.";
+          return;
+        }
+
+        currentUserRole = accountType;
+        await ensureUserDoc(accountType, userCred.user);
+
+        await refreshUserData();
+        loginOverlay.classList.add("hidden");
+      } catch (error) {
+        authStatus.className = "status red show";
+        authStatus.textContent = error.message;
+      }
+    });
           } else {
             const userCred = await signInWithEmailAndPassword(auth, email, password);
             await userCred.user.reload();
@@ -2625,6 +2622,3 @@
   </script>
 </body>
 </html>
-
-</html>
-
