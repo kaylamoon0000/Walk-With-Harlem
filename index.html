@@ -1,67 +1,100 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Walk Platform</title>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
 <style>
-body{margin:0;font-family:Inter,Arial;background:#f5f9ff;}
-#map{height:70vh;}
-.hidden{display:none;}
-
-.auth{
-position:fixed;
-inset:0;
-background:linear-gradient(135deg,#4fa3ff,#1f5ed8);
-display:flex;
-align-items:center;
-justify-content:center;
+body{
+margin:0;
+font-family:Inter,system-ui;
+background:#f6f8fc;
 }
 
-.box{
+/* LOGIN SCREEN */
+.auth{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#4f8cff,#1e4ed8);
+}
+
+.card{
 background:white;
 padding:30px;
-border-radius:20px;
+border-radius:18px;
 width:380px;
-box-shadow:0 20px 60px rgba(0,0,0,0.2);
+box-shadow:0 20px 50px rgba(0,0,0,0.2);
 }
 
-h2{margin:0 0 10px;}
+h2{
+margin-bottom:10px;
+}
 
-input,select{
+.tabs{
+display:flex;
+gap:10px;
+margin-bottom:10px;
+}
+
+.tabs button{
+flex:1;
+padding:10px;
+border:none;
+border-radius:10px;
+background:#e5e7eb;
+cursor:pointer;
+}
+
+.tabs .active{
+background:#2563eb;
+color:white;
+}
+
+input{
 width:100%;
 padding:12px;
-margin:8px 0;
+margin:6px 0;
 border-radius:10px;
 border:1px solid #ddd;
 }
 
-button{
+button.main{
+width:100%;
 padding:12px;
+margin-top:10px;
 border:none;
 border-radius:10px;
-background:#2c6cff;
+background:#2563eb;
 color:white;
 cursor:pointer;
-width:100%;
-margin-top:10px;
 }
 
-.tabs button{
-background:#ddd;color:black;width:48%;
+#msg{
+margin-top:10px;
+color:red;
 }
-.tabs .active{background:#2c6cff;color:white;}
+
+/* APP */
+#app{
+display:none;
+}
 
 #top{
-padding:15px;
 background:white;
+padding:15px;
 display:flex;
 gap:10px;
 align-items:center;
 }
 
+#map{
+height:75vh;
+}
 </style>
 </head>
 
@@ -69,38 +102,36 @@ align-items:center;
 
 <!-- LOGIN -->
 <div class="auth" id="authScreen">
+<div class="card">
 
-<div class="box">
-
-<h2 id="title">Login (Walker)</h2>
+<h2 id="authTitle">Login (Walker)</h2>
 
 <div class="tabs">
-<button id="walker" class="active">Walker</button>
-<button id="business">Business</button>
+<button id="walkerBtn" class="active">Walker</button>
+<button id="businessBtn">Business</button>
 </div>
 
 <div class="tabs">
-<button id="login" class="active">Sign In</button>
-<button id="signup">Create</button>
+<button id="loginTab" class="active">Sign In</button>
+<button id="signupTab">Create</button>
 </div>
 
 <input id="email" placeholder="Email (.com)">
-<input id="pass" type="password" placeholder="Password">
+<input id="password" type="password" placeholder="Password">
 
-<div id="extra" class="hidden">
+<div id="extra" style="display:none;">
 <input id="name" placeholder="Name">
 <input id="biz" placeholder="Business Name">
 </div>
 
-<button id="submit">Continue</button>
-
+<button class="main" id="submit">Continue</button>
 <p id="msg"></p>
 
 </div>
 </div>
 
 <!-- APP -->
-<div id="app" class="hidden">
+<div id="app">
 
 <div id="top">
 <select id="time">
@@ -135,8 +166,7 @@ getAuth,
 createUserWithEmailAndPassword,
 signInWithEmailAndPassword,
 onAuthStateChanged,
-signOut,
-sendEmailVerification
+signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
@@ -157,34 +187,35 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // STATE
-let role="walker";
-let mode="login";
+let role = "walker";
+let mode = "login";
 
-// UI
-const msg=document.getElementById("msg");
+// UI refs
+const msg = document.getElementById("msg");
 
-function ui(){
-title.innerText=(mode==="login"?"Login":"Create")+" ("+role+")";
-extra.classList.toggle("hidden",mode==="login");
+// UI update
+function updateUI(){
+authTitle.innerText = (mode==="login"?"Login":"Create")+" ("+role+")";
+extra.style.display = mode==="signup" ? "block" : "none";
 
-walker.classList.toggle("active",role==="walker");
-business.classList.toggle("active",role==="business");
+walkerBtn.classList.toggle("active",role==="walker");
+businessBtn.classList.toggle("active",role==="business");
 
-login.classList.toggle("active",mode==="login");
-signup.classList.toggle("active",mode==="signup");
+loginTab.classList.toggle("active",mode==="login");
+signupTab.classList.toggle("active",mode==="signup");
 }
 
 // SWITCHES
-walker.onclick=()=>{role="walker";ui();}
-business.onclick=()=>{role="business";ui();}
-login.onclick=()=>{mode="login";ui();}
-signup.onclick=()=>{mode="signup";ui();}
+walkerBtn.onclick=()=>{role="walker";updateUI();}
+businessBtn.onclick=()=>{role="business";updateUI();}
+loginTab.onclick=()=>{mode="login";updateUI();}
+signupTab.onclick=()=>{mode="signup";updateUI();}
 
 // AUTH
-submit.onclick=async()=>{
+submit.onclick = async () => {
 
 let e=email.value.trim();
-let p=pass.value.trim();
+let p=password.value.trim();
 
 if(!e.endsWith(".com")){
 msg.innerText="Use .com email";
@@ -193,42 +224,36 @@ return;
 
 try{
 
-// CREATE
+// SIGN UP
 if(mode==="signup"){
-let cred=await createUserWithEmailAndPassword(auth,e,p);
+let cred = await createUserWithEmailAndPassword(auth,e,p);
 
-await setDoc(doc(db,role==="walker"?"walkers":"businesses",cred.user.uid),{
+await setDoc(doc(db, role==="walker"?"walkers":"businesses", cred.user.uid),{
 email:e,
 role:role,
 name:name.value,
 business:biz.value
 });
 
-await sendEmailVerification(cred.user);
-
-msg.innerText="Account created. Check email to verify, then sign in.";
+msg.innerText="Account created. Now sign in.";
 mode="login";
-ui();
+updateUI();
 return;
 }
 
 // LOGIN
-let cred=await signInWithEmailAndPassword(auth,e,p);
-
-if(!cred.user.emailVerified){
-msg.innerText="Verify email first.";
-return;
-}
+let cred = await signInWithEmailAndPassword(auth,e,p);
 
 // detect role
-let w=await getDoc(doc(db,"walkers",cred.user.uid));
-let b=await getDoc(doc(db,"businesses",cred.user.uid));
+let w = await getDoc(doc(db,"walkers",cred.user.uid));
+let b = await getDoc(doc(db,"businesses",cred.user.uid));
 
 if(w.exists()) role="walker";
 if(b.exists()) role="business";
 
-authScreen.classList.add("hidden");
-app.classList.remove("hidden");
+// enter app
+authScreen.style.display="none";
+app.style.display="block";
 
 }catch(err){
 msg.innerText=err.message;
@@ -240,19 +265,19 @@ msg.innerText=err.message;
 logout.onclick=()=>{signOut(auth);location.reload();}
 
 // MAP
-let map=L.map('map').setView([40.821,-73.949],18);
+let map = L.map('map').setView([40.821,-73.949],18);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 let route;
 
 // ROUTE
-function gen(t,m){
-let s=t/10;
-if(m==="run")s*=1.5;
+function generate(t,m){
+let s = t/10;
+if(m==="run") s*=1.5;
 
 return [
 [40.821,-73.949],
-[40.821+0.0003*s,-73.949+0.0006*s],
+[40.821+0.0004*s,-73.949+0.0006*s],
 [40.821+0.0008*s,-73.949+0.0012*s],
 [40.821,-73.949]
 ];
@@ -263,26 +288,26 @@ build.onclick=()=>{
 let t=time.value;
 let m=mode.value;
 
-let pts=gen(t,m);
+let pts = generate(t,m);
 
-if(route)map.removeLayer(route);
+if(route) map.removeLayer(route);
 
-route=L.polyline(pts,{color:"blue"}).addTo(map);
+route = L.polyline(pts,{color:"#2563eb",weight:5}).addTo(map);
 
-routeTitle.innerText=`${t} min ${m} route`;
+routeTitle.innerText = `${t} min ${m} route`;
 
 map.fitBounds(route.getBounds());
 };
 
 // AUTO LOGIN
 onAuthStateChanged(auth,user=>{
-if(user && user.emailVerified){
-authScreen.classList.add("hidden");
-app.classList.remove("hidden");
+if(user){
+authScreen.style.display="none";
+app.style.display="block";
 }
 });
 
-ui();
+updateUI();
 
 </script>
 
