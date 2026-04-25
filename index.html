@@ -8,56 +8,43 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
 <style>
-body{
-margin:0;
-font-family:Inter, Arial;
-background:#f4f7fb;
-}
+body{margin:0;font-family:Inter;background:#eef3fb}
 
-/* LOGIN */
+/* AUTH */
 #authScreen{
 height:100vh;
 display:flex;
 align-items:center;
 justify-content:center;
-background:linear-gradient(135deg,#4f8cff,#1e4ed8);
+background:linear-gradient(135deg,#4f8cff,#1e40af);
 }
 
 .card{
 background:white;
-padding:28px;
-border-radius:16px;
-width:360px;
-box-shadow:0 15px 40px rgba(0,0,0,0.2);
+padding:30px;
+border-radius:18px;
+width:400px;
+box-shadow:0 20px 50px rgba(0,0,0,0.25);
 }
 
-h2{margin-bottom:10px;}
+h2{margin-bottom:10px}
 
-.tabs{
-display:flex;
-gap:8px;
-margin-bottom:10px;
-}
-
+.tabs{display:flex;gap:10px;margin-bottom:10px}
 .tabs button{
 flex:1;
 padding:10px;
 border:none;
-border-radius:8px;
+border-radius:10px;
 background:#e5e7eb;
 cursor:pointer;
 }
-
-.tabs .active{
-background:#2563eb;
-color:white;
-}
+.tabs .active{background:#2563eb;color:white}
 
 input{
 width:100%;
 padding:12px;
 margin:6px 0;
-border-radius:8px;
+border-radius:10px;
 border:1px solid #ddd;
 }
 
@@ -72,13 +59,10 @@ color:white;
 cursor:pointer;
 }
 
-#msg{
-margin-top:10px;
-color:red;
-}
+#msg{margin-top:10px;color:red}
 
 /* APP */
-#app{display:none;}
+#app{display:none}
 
 #top{
 background:white;
@@ -88,9 +72,7 @@ gap:10px;
 align-items:center;
 }
 
-#map{
-height:75vh;
-}
+#map{height:75vh}
 </style>
 </head>
 
@@ -121,7 +103,6 @@ height:75vh;
 </div>
 
 <button class="mainBtn" id="submit">Continue</button>
-
 <p id="msg"></p>
 
 </div>
@@ -133,7 +114,7 @@ height:75vh;
 <div id="top">
 <select id="time">
 <option value="10">10 min</option>
-<option value="20" selected>20 min</option>
+<option value="20">20 min</option>
 <option value="40">40 min</option>
 </select>
 
@@ -183,15 +164,12 @@ const auth = getAuth(appFirebase);
 const db = getFirestore(appFirebase);
 
 // STATE
-let role = "walker";
-let mode = "login";
-
-// UI
-const msg = document.getElementById("msg");
+let role="walker";
+let mode="login";
 
 function updateUI(){
-title.innerText = (mode==="login"?"Login":"Create")+" ("+role+")";
-extra.style.display = mode==="signup" ? "block" : "none";
+title.innerText=(mode==="login"?"Login":"Create")+" ("+role+")";
+extra.style.display=mode==="signup"?"block":"none";
 
 walkerBtn.classList.toggle("active",role==="walker");
 businessBtn.classList.toggle("active",role==="business");
@@ -200,14 +178,14 @@ loginTab.classList.toggle("active",mode==="login");
 signupTab.classList.toggle("active",mode==="signup");
 }
 
-// SWITCHES
-walkerBtn.onclick=()=>{role="walker";updateUI();}
-businessBtn.onclick=()=>{role="business";updateUI();}
-loginTab.onclick=()=>{mode="login";updateUI();}
-signupTab.onclick=()=>{mode="signup";updateUI();}
+// TOGGLES
+walkerBtn.onclick=()=>{role="walker";updateUI()}
+businessBtn.onclick=()=>{role="business";updateUI()}
+loginTab.onclick=()=>{mode="login";updateUI()}
+signupTab.onclick=()=>{mode="signup";updateUI()}
 
 // AUTH
-submit.onclick = async () => {
+submit.onclick=async()=>{
 
 let e=email.value.trim();
 let p=password.value.trim();
@@ -220,25 +198,25 @@ return;
 try{
 
 if(mode==="signup"){
-let cred = await createUserWithEmailAndPassword(auth,e,p);
+let cred=await createUserWithEmailAndPassword(auth,e,p);
 
-await setDoc(doc(db, role==="walker"?"walkers":"businesses", cred.user.uid),{
+await setDoc(doc(db,role==="walker"?"walkers":"businesses",cred.user.uid),{
 email:e,
 role:role,
 name:name.value,
 business:biz.value
 });
 
-msg.innerText="Account created. Now sign in.";
+msg.innerText="Account created. Sign in.";
 mode="login";
 updateUI();
 return;
 }
 
-let cred = await signInWithEmailAndPassword(auth,e,p);
+let cred=await signInWithEmailAndPassword(auth,e,p);
 
-let w = await getDoc(doc(db,"walkers",cred.user.uid));
-let b = await getDoc(doc(db,"businesses",cred.user.uid));
+let w=await getDoc(doc(db,"walkers",cred.user.uid));
+let b=await getDoc(doc(db,"businesses",cred.user.uid));
 
 if(w.exists()) role="walker";
 if(b.exists()) role="business";
@@ -253,10 +231,10 @@ msg.innerText=err.message;
 };
 
 // LOGOUT
-logout.onclick=()=>{signOut(auth);location.reload();}
+logout.onclick=()=>{signOut(auth);location.reload()}
 
 // MAP
-let map = L.map('map').setView([40.821,-73.949],18);
+let map=L.map('map').setView([40.821,-73.949],18);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 let route;
@@ -281,9 +259,9 @@ let pts=generate(t,m);
 
 if(route) map.removeLayer(route);
 
-route = L.polyline(pts,{color:"#2563eb",weight:5}).addTo(map);
+route=L.polyline(pts,{color:"#2563eb",weight:5}).addTo(map);
 
-routeTitle.innerText = `${t} min ${m} route`;
+routeTitle.innerText=`${t} min ${m} route`;
 
 map.fitBounds(route.getBounds());
 };
