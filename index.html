@@ -44,110 +44,143 @@ button{padding:10px 15px;margin-top:10px;cursor:pointer}
 
 <script>
 
-// LOGIN SYSTEM
-let users = JSON.parse(localStorage.getItem("users")||"{}");
-let currentUserRole = "walker";
+// ================= STATE =================
+let accountType = "walker";
+let sessionStarted = false;
+let currentStep = 0;
+let walkerMarker = null;
+let routeLine = null;
 
-function setRole(r){ currentUserRole = r; }
+// ================= LOGIN TYPE SWITCH =================
+document.querySelectorAll("#accountTypeSwitch button").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll("#accountTypeSwitch button")
+      .forEach(b => b.classList.remove("active"));
 
-function submitLogin(){
-let e=email.value;
-let p=password.value;
+    btn.classList.add("active");
+    accountType = btn.dataset.type;
+  };
+});
 
-if(!e||!p){
-msg.innerText="Enter info";
-return;
+// ================= LOGIN =================
+function completeAuth(profile) {
+  localStorage.setItem("user", JSON.stringify(profile));
+  loginOverlay.classList.add("hidden");
+  applyRoleUI(profile.type);
 }
 
-if(!users[e]){
-users[e]={password:p,role:currentUserRole};
-localStorage.setItem("users",JSON.stringify(users));
-msg.innerText="Account created";
-return;
+// override existing auth
+authSubmit.onclick = () => {
+  const name = authName.value || "User";
+  const email = authEmail.value;
+
+  if (!email) {
+    authStatus.className = "status red show";
+    authStatus.textContent = "Enter email";
+    return;
+  }
+
+  completeAuth({ name, email, type: accountType });
+};
+
+guestLogin.onclick = () => {
+  completeAuth({ name: "Guest", email: "guest", type: "walker" });
+};
+
+// ================= ROLE UI =================
+function applyRoleUI(role) {
+  if (role === "business") {
+    openPanel("businesses");
+  } else {
+    openPanel("platform");
+  }
 }
 
-if(users[e].password!==p){
-msg.innerText="Wrong password";
-return;
+// ================= MAP =================
+const map = L.map("leafletMap").setView([40.82155, -73.9487], 18);
+
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+// ================= ROUTE =================
+function buildSimpleRoute() {
+  return [
+    [40.82094, -73.94952],
+    [40.8215, -73.9488],
+    [40.8223, -73.9492],
+    [40.8216, -73.9502],
+    [40.82094, -73.94952]
+  ];
 }
 
-currentUserRole=users[e].role;
+// ================= RENDER MAP =================
+function renderRoute() {
+  if (routeLine) map.removeLayer(routeLine);
 
-loginOverlay.classList.add("hidden");
-app.classList.remove("hidden");
+  const coords = buildSimpleRoute();
 
-initMap();
+  routeLine = L.polyline(coords, {
+    color: "#4b98ea",
+    weight: 6
+  }).addTo(map);
+
+  walkerMarker = L.circleMarker(coords[0], {
+    radius: 8,
+    color: "#17324f",
+    fillColor: "#17324f",
+    fillOpacity: 1
+  }).addTo(map);
+
+  map.fitBounds(routeLine.getBounds(), { padding: [50,50] });
 }
 
-function logout(){
-location.reload();
+// ================= SMOOTH MOVEMENT =================
+function moveWalkerTo(index) {
+  const coords = buildSimpleRoute();
+  if (!walkerMarker || index >= coords.length) return;
+
+  const start = walkerMarker.getLatLng();
+  const end = L.latLng(coords[index]);
+
+  let t = 0;
+
+  function animate() {
+    t += 0.02;
+
+    const lat = start.lat + (end.lat - start.lat) * t;
+    const lng = start.lng + (end.lng - start.lng) * t;
+
+    walkerMarker.setLatLng([lat, lng]);
+
+    if (t < 1) requestAnimationFrame(animate);
+  }
+
+  animate();
 }
 
-function switchRole(){
-currentUserRole=currentUserRole==="walker"?"business":"walker";
-alert("Role: "+currentUserRole);
-}
+// ================= SESSION =================
+document.getElementById("startWalk").onclick = () => {
+  sessionStarted = true;
+  currentStep = 0;
+  renderRoute();
+};
 
-// MAP
-let map,walker;
+document.getElementById("buildRoute").onclick = () => {
+  renderRoute();
+};
 
-function initMap(){
-map=L.map('map').setView([40.821,-73.949],17);
+document.getElementById("resetWalk").onclick = () => {
+  location.reload();
+};
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+// ================= CLICK STOPS =================
+document.addEventListener("click", (e) => {
+  if (!sessionStarted) return;
 
-walker=L.circleMarker([40.821,-73.949],{
-radius:8,
-color:"black",
-fillColor:"black",
-fillOpacity:1
-}).addTo(map);
-
-runRoute();
-}
-
-// SMOOTH MOVEMENT
-function runRoute(){
-
-let path=[
-[40.821,-73.949],
-[40.822,-73.948],
-[40.823,-73.949],
-[40.822,-73.950],
-[40.821,-73.949]
-];
-
-let i=0;
-
-function next(){
-if(i>=path.length-1)return;
-
-let start=L.latLng(path[i]);
-let end=L.latLng(path[i+1]);
-
-let t=0;
-
-function animate(){
-t+=0.02;
-
-let lat=start.lat+(end.lat-start.lat)*t;
-let lng=start.lng+(end.lng-start.lng)*t;
-
-walker.setLatLng([lat,lng]);
-
-if(t<1){
-requestAnimationFrame(animate);
-}else{
-i++;
-next();
-}
-}
-
-animate();
-}
-
-next();
-}
+  if (e.target.closest(".stop-card")) {
+    currentStep++;
+    moveWalkerTo(currentStep);
+  }
+});
 
 </script>
 
