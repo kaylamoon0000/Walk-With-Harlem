@@ -1633,7 +1633,6 @@
         loginKpis.innerHTML = `
           <div class="login-kpi"><strong>Live routes</strong>personalized by time, pace, and reward interest</div>
           <div class="login-kpi"><strong>Checkpoint rewards</strong>synced with business participation and app activity</div>
-          <div class="login-kpi"><strong>Saved progress</strong>stored securely in Firebase</div>
           <div class="login-kpi"><strong>User dashboard</strong>with route history, points, streaks, and milestones</div>
         `;
       } else {
@@ -1921,7 +1920,7 @@
 
       platformTitle.textContent = role === "walker" ? "Platform" : "Business Platform";
       platformIntro.textContent = role === "walker"
-        ? "This version behaves like a real product flow: a signed-in user builds a route, starts a session, reaches checkpoints, unlocks rewards, updates business impact, and stores progress in Firebase."
+        ? "This version behaves like a real product flow: a signed-in user builds a route, starts a session, reaches checkpoints, unlocks rewards, updates business impact, and stores progress."
         : "This version behaves like a real business portal: a signed-in storefront or organization monitors scans, route visibility, rewards, and projected return without entering the walker session experience.";
 
       businessesIntro.textContent = role === "walker"
