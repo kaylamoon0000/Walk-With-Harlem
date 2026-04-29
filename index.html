@@ -781,3 +781,93 @@
         title: "20-Minute Discovery Route",
         description: "Balanced route around the square.",
         summary: "Medium loop.",
+        chips: ["Discovery", "Food", "4 stops"],
+        hero: { time: "20 min", mode: "Standard", reward: "Food", stops: "4 stops" },
+        steps: ["Start at Montefiore.", "Reach Starbucks.", "Go to Harlem Shake.", "Finish at Sylvia's."],
+        checkpoints: [
+          { name: "Montefiore Entry", type: "Start", reward: "Started", points: 0, lat: 40.82094, lng: -73.94952 },
+          { name: "Starbucks", type: "CP 1", reward: "10% off", points: 25, lat: 40.82126, lng: -73.94900 },
+          { name: "Harlem Shake", type: "CP 2", reward: "Free Drink", points: 35, lat: 40.82178, lng: -73.94818 },
+          { name: "Sylvia's Corner", type: "Final", reward: "15% off", points: 55, lat: 40.82218, lng: -73.94752 }
+        ]
+      }
+    };
+
+    const businessData = {
+      shake: {
+        cards: [{title: "Harlem Shake", badge: "Premium", badgeClass: "green", lines: ["Scans: 214", "Visits: 89"]}],
+        insight: "<h3>Harlem Shake Insight</h3><p>High lunchtime conversion.</p>"
+      },
+      sylvia: {
+        cards: [{title: "Sylvia's", badge: "Standard", badgeClass: "gold", lines: ["Scans: 176", "Visits: 72"]}],
+        insight: "<h3>Sylvia's Insight</h3><p>Great for family loops.</p>"
+      },
+      books: {
+        cards: [{title: "Word Up Books", badge: "Basic", badgeClass: "blue", lines: ["Scans: 121", "Visits: 48"]}],
+        insight: "<h3>Word Up Insight</h3><p>Best for retail focus.</p>"
+      }
+    };
+
+    // --- LOGIC ---
+    let currentConfig = routeConfigurations["20-standard-food"];
+    let sessionStarted = false;
+    let currentStep = 0;
+    let map = L.map("leafletMap").setView([40.82155, -73.9487], 18);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+    function renderRouteConfig(key) {
+      currentConfig = routeConfigurations[key] || routeConfigurations["20-standard-food"];
+      document.getElementById("routeTitle").textContent = currentConfig.title;
+      // Map and Step rendering logic
+      renderStopCards();
+    }
+
+    function renderStopCards() {
+      const list = document.getElementById("checkpointList");
+      list.innerHTML = currentConfig.checkpoints.map((cp, i) => `
+        <button class="stop-card ${i === currentStep ? 'active' : 'locked'}" onclick="handleStop(${i})">
+          ${cp.name} - ${cp.reward}
+        </button>
+      `).join('');
+    }
+
+    window.handleStop = (index) => {
+      if(!sessionStarted || index !== currentStep) return;
+      alert("Reached: " + currentConfig.checkpoints[index].name);
+      currentStep++;
+      renderStopCards();
+    };
+
+    document.getElementById("startWalk").onclick = () => {
+      sessionStarted = true;
+      currentStep = 0;
+      renderStopCards();
+      alert("Session Started!");
+    };
+
+    // Tab Switching
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.getElementById(btn.dataset.panel).classList.add("active");
+        btn.classList.add("active");
+      };
+    });
+
+    // Initial Load
+    renderBusiness("shake");
+    function renderBusiness(key) {
+      const data = businessData[key];
+      document.getElementById("businessInsight").innerHTML = data.insight;
+      document.getElementById("businessCardA").innerHTML = `<h3>${data.cards[0].title}</h3><p>${data.cards[0].lines[0]}</p>`;
+    }
+    
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.onclick = () => renderBusiness(btn.dataset.store);
+    });
+
+  </script>
+</body>
+</html>
+
