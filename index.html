@@ -3,118 +3,236 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Walk-to-Earn Harlem</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<title>Walk-to-Earn Harlem</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <style>
-:root{--blue:#347dff;--bg:#f4f8fc;--card:#fff;--border:#e1e8f0}
-body{margin:0;font-family:Inter;background:var(--bg);color:#0f2235}
-.top{display:flex;justify-content:space-between;padding:16px 24px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000}
-.tabs{display:flex;gap:10px}
-.tab{padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:700}
-.tab.active{background:#edf4ff;color:#245fcb}
-.btn{padding:10px 16px;border-radius:12px;border:none;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
-.container{padding:20px;max-width:1300px;margin:auto}
-.grid{display:grid;grid-template-columns:300px 1fr 300px;gap:16px}
-.card{background:var(--card);border-radius:20px;padding:16px;border:1px solid var(--border)}
-#map{height:600px;border-radius:16px}
-.auth{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
-.authBox{background:white;padding:24px;border-radius:20px;width:320px}
+body{
+  margin:0;
+  font-family:Inter;
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:white;
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  padding:20px 40px;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(10px);
+}
+
+.button{
+  padding:10px 16px;
+  border-radius:10px;
+  background:#3b82f6;
+  border:none;
+  color:white;
+  cursor:pointer;
+}
+
+.container{
+  padding:30px;
+}
+
+.card{
+  background:rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:300px 1fr 300px;
+  gap:20px;
+}
+
+#map{
+  height:600px;
+  border-radius:16px;
+}
+
+.stop{
+  padding:10px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.05);
+  margin-bottom:10px;
+  cursor:pointer;
+}
+
+.auth{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#0f172a;
+}
+
+.auth-box{
+  width:320px;
+  background:#1e293b;
+  padding:20px;
+  border-radius:16px;
+}
+
+input,select{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:10px;
+  border:none;
+}
+
 .hidden{display:none}
-.stop{padding:10px;border:1px solid var(--border);border-radius:12px;margin-top:8px}
+
 </style>
 </head>
+
 <body>
 
-<!-- AUTH -->
 <div id="auth" class="auth">
-<div class="authBox">
-<h2>Join Platform</h2>
-<select id="role">
-<option value="walker">Walker</option>
-<option value="business">Business</option>
-</select>
-<input placeholder="Email"><input type="password" placeholder="Password">
-<button class="btn" onclick="login()">Enter</button>
-</div></div>
-
-<!-- NAV -->
-<div class="top">
-<div><strong>AI Walk-to-Earn Harlem</strong></div>
-<div class="tabs">
-<div class="tab active" onclick="openTab('platform')">Platform</div>
-<div class="tab" onclick="openTab('proposal')">Proposal</div>
-<div class="tab" onclick="openTab('business')">Business</div>
-<div class="tab" onclick="openTab('app')">App</div>
-</div>
-<div id="userRole">Guest</div>
+  <div class="auth-box">
+    <h2>Login</h2>
+    <input placeholder="Email">
+    <input placeholder="Password" type="password">
+    <select id="role">
+      <option value="walker">Walker</option>
+      <option value="business">Business</option>
+    </select>
+    <button class="button" onclick="enterApp()">Enter</button>
+  </div>
 </div>
 
-<!-- PLATFORM -->
-<div class="container tabPage" id="platform">
+<div id="app" class="hidden">
+
+<div class="header">
+  <h2>Walk-to-Earn Harlem</h2>
+  <div>
+    <button class="button" onclick="buildRoute()">Build Route</button>
+    <button class="button" onclick="startWalk()">Start</button>
+  </div>
+</div>
+
+<div class="container">
+
 <div class="grid">
+
 <div class="card">
-<h3>AI Route Builder</h3>
-<select id="theme">
-<option value="food">Food</option>
-<option value="arts">Arts</option>
-<option value="retail">Retail</option>
+<h3>Route Settings</h3>
+<select id="time">
+<option>10</option>
+<option selected>20</option>
+<option>40</option>
 </select>
-<button class="btn" onclick="buildRoute()">Generate Route</button>
-<div id="stops"></div>
+
+<select id="type">
+<option value="food">Food</option>
+<option value="mixed">Mixed</option>
+</select>
 </div>
+
 <div class="card">
-<h3>Live Map</h3>
 <div id="map"></div>
 </div>
+
 <div class="card">
-<h3 id="dashboardTitle">Dashboard</h3>
-<div id="dashboard"></div>
-</div>
-</div>
+<h3>Stops</h3>
+<div id="stops"></div>
 </div>
 
-<!-- PROPOSAL -->
-<div class="container tabPage hidden" id="proposal">
-<div class="card"><h2>Proposal</h2>
-<p>This platform connects walking activity with small business engagement and public space activation around Montefiore Square.</p></div>
 </div>
 
-<!-- BUSINESS -->
-<div class="container tabPage hidden" id="business">
-<div class="card"><h2>Business Analytics</h2>
-<div id="bizData">Visits: 0<br>Conversions: 0<br>Revenue Lift: $0</div></div>
+<div class="card">
+<h3>Business Dashboard</h3>
+<div id="business"></div>
 </div>
 
-<!-- APP -->
-<div class="container tabPage hidden" id="app">
-<div class="card"><h2>User App Simulation</h2>
-<button class="btn" onclick="simulateScan()">Scan QR</button>
-<div id="rewards">No rewards yet</div></div>
 </div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-let role="walker";
-let points=0,visits=0,rewards=0;
-function login(){role=document.getElementById('role').value;document.getElementById('auth').classList.add('hidden');document.getElementById('userRole').innerText=role;renderDashboard();}
-function renderDashboard(){const el=document.getElementById('dashboard');if(role==='walker'){el.innerHTML=`Points: ${points}<br>Rewards: ${rewards}`}else{el.innerHTML=`Visits: ${visits}<br>Revenue Lift: $${visits*12}`}}
-
-function openTab(id){document.querySelectorAll('.tabPage').forEach(p=>p.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));event.target.classList.add('active');}
-
-const map=L.map('map').setView([40.82155,-73.9487],18);
+let map=L.map('map').setView([40.8215,-73.9487],18);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-let routeLayer=L.layerGroup().addTo(map);
 
-const data={food:[{n:'Cafe',lat:40.821,lng:-73.949,score:0.9},{n:'Bakery',lat:40.822,lng:-73.948,score:0.8},{n:'Deli',lat:40.8215,lng:-73.947,score:0.7}],arts:[{n:'Mural',lat:40.821,lng:-73.949,score:0.9},{n:'Gallery',lat:40.822,lng:-73.948,score:0.8},{n:'Books',lat:40.8215,lng:-73.947,score:0.85}],retail:[{n:'Shop',lat:40.821,lng:-73.949,score:0.7},{n:'Market',lat:40.822,lng:-73.948,score:0.9},{n:'Boutique',lat:40.8215,lng:-73.947,score:0.8}]};
+let markers=[];
+let line;
 
-function scoreRoute(nodes){return nodes.sort((a,b)=>b.score-a.score);} // simple AI scoring
+let routes=[
+  [
+    {name:'Start',lat:40.8209,lng:-73.9495},
+    {name:'Cafe',lat:40.8213,lng:-73.9490},
+    {name:'Shop',lat:40.8218,lng:-73.9482},
+    {name:'End',lat:40.8222,lng:-73.9475}
+  ],
+  [
+    {name:'Start',lat:40.8209,lng:-73.9495},
+    {name:'Books',lat:40.8216,lng:-73.9480},
+    {name:'Food',lat:40.8217,lng:-73.9486},
+    {name:'End',lat:40.8212,lng:-73.9478}
+  ]
+];
 
-function buildRoute(){routeLayer.clearLayers();let t=document.getElementById('theme').value;let pts=scoreRoute(data[t]);let coords=[[40.8209,-73.9495]];pts.forEach(p=>coords.push([p.lat,p.lng]));L.polyline(coords,{dashArray:'10 10'}).addTo(routeLayer);coords.forEach(c=>L.circleMarker(c).addTo(routeLayer));document.getElementById('stops').innerHTML=pts.map(p=>`<div class='stop'><strong>${p.n}</strong></div>`).join('');}
+let currentRoute=[];
+let step=0;
 
-function simulateScan(){points+=20;rewards+=1;visits+=1;document.getElementById('rewards').innerHTML=`Rewards: ${rewards}`;document.getElementById('bizData').innerHTML=`Visits: ${visits}<br>Conversions: ${rewards}<br>Revenue Lift: $${visits*12}`;renderDashboard();}
+function enterApp(){
+  document.getElementById('auth').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+}
 
-buildRoute();
+function clearMap(){
+  markers.forEach(m=>map.removeLayer(m));
+  markers=[];
+  if(line)map.removeLayer(line);
+}
+
+function buildRoute(){
+  clearMap();
+  currentRoute=routes[Math.floor(Math.random()*routes.length)];
+  let coords=[];
+
+  currentRoute.forEach((p,i)=>{
+    let m=L.marker([p.lat,p.lng]).addTo(map).bindPopup(p.name);
+    markers.push(m);
+    coords.push([p.lat,p.lng]);
+  });
+
+  line=L.polyline(coords).addTo(map);
+  map.fitBounds(line.getBounds());
+
+  renderStops();
+}
+
+function renderStops(){
+  let div=document.getElementById('stops');
+  div.innerHTML='';
+  currentRoute.forEach((s,i)=>{
+    let el=document.createElement('div');
+    el.className='stop';
+    el.innerText=s.name;
+    el.onclick=()=>hitStop(i);
+    div.appendChild(el);
+  });
+}
+
+function startWalk(){
+  step=0;
+  alert('Walk started');
+}
+
+function hitStop(i){
+  if(i!==step){alert('Wrong stop');return;}
+  alert('Stop '+i+' complete');
+  step++;
+}
+
 </script>
 
 </body>
