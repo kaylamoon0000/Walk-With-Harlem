@@ -1311,38 +1311,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      sendEmailVerification,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import {
-      getFirestore,
-      doc,
-      setDoc,
-      getDoc,
-      updateDoc,
-      arrayUnion,
-      increment,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCaV7k31Rg-FAF63K7TOh0xMcMYJdSb-lY",
-      authDomain: "walk-with-harlem.firebaseapp.com",
-      projectId: "walk-with-harlem",
-      storageBucket: "walk-with-harlem.firebasestorage.app",
-      messagingSenderId: "29626188705",
-      appId: "1:29626188705:web:2a3230691b372cf5cb01e0"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
 
     const START_POINT = { lat: 40.82094, lng: -73.94952 };
 
