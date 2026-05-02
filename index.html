@@ -1435,21 +1435,43 @@
       appGuide.className = "status blue";
     }
 
-    function getSelectedConfigKey() {
-      const minutes = document.getElementById("minutes").value;
-      const pace = document.getElementById("pace").value;
-      const rewardType = document.getElementById("rewardType").value;
-      return `${minutes}-${pace}-${rewardType}`;
-    }
+function getSelectedConfigKey() {
+  const minutes = document.getElementById("minutes").value;
+  const pace = document.getElementById("pace").value;
+  const rewardType = document.getElementById("rewardType").value;
 
-    function moveWalkerTo(index) {
-      const stop = currentConfig.checkpoints[index];
-      if (!walkerMarker) return;
+  const exactKey = `${minutes}-${pace}-${rewardType}`;
 
-      walkerMarker.setLatLng([stop.lat, stop.lng]);
-      walkerMarker.setStyle({ opacity: 1, fillOpacity: 1 });
-      map.flyTo([stop.lat, stop.lng], 19, { duration: 0.8 });
-    }
+  // use exact config if it exists
+  if (routeConfigurations[exactKey]) return exactKey;
+
+  // fallback hierarchy that preserves selected time first
+  const fallbackKeys = [
+    `${minutes}-standard-${rewardType}`,
+    `${minutes}-standard-food`,
+    `20-standard-${rewardType}`,
+    `20-standard-food`
+  ];
+
+  for (const key of fallbackKeys) {
+    if (routeConfigurations[key]) return key;
+  }
+
+  return "20-standard-food";
+}
+
+function moveWalkerTo(index) {
+  const stop = currentConfig.checkpoints[index];
+  if (!walkerMarker) return;
+
+  walkerMarker.setLatLng([stop.lat, stop.lng]);
+  walkerMarker.setStyle({
+    opacity: 1,
+    fillOpacity: 1
+  });
+
+  // removed flyTo so map stays locked in place
+}
 
     function handleStopClick(index) {
       const stop = currentStops[index];
