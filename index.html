@@ -1090,7 +1090,13 @@ function setLanguage(lang) {
 
   renderRouteConfig(currentConfigKey);
   renderStopCards();
-  updateMetrics();
+  function updateMetrics() {
+    metricDistance.textContent = `${totalDistance.toFixed(1)} mi`;
+    metricScans.textContent = `${totalScans} ${t("scans")}`;
+    metricPoints.textContent = `${totalPoints} ${t("pts")}`;
+    userLeaderboardPoints.textContent = `${totalPoints} ${t("pts")}`;
+    impactVisits.textContent = `${businessVisits} visits`;
+    impactRewards.textContent = `${businessRewards} rewards`;
 }
     const tabButtons = document.querySelectorAll("[data-panel]");
     const panels = document.querySelectorAll(".panel");
