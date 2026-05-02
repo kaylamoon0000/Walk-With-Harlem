@@ -1031,6 +1031,67 @@
   ></script>
 
   <script>
+  let currentLanguage = "en";
+
+  const translations = {
+    en: {
+      platform: "Platform",
+      proposal: "Proposal",
+      images: "Images",
+      businesses: "Businesses",
+      app: "App",
+      openPlatform: "Open Platform",
+      viewImages: "View Images",
+      sessionSummary: "Session Summary",
+      routeBuilt: "Route built",
+      previewUpdated: "Preview updated",
+      sessionStarted: "Session started",
+      start: "Start",
+      qrStop: "QR stop",
+      scans: "scans",
+      pts: "pts",
+      noBusiness: "No active business yet"
+  },
+
+  es: {
+    platform: "Plataforma",
+    proposal: "Propuesta",
+    images: "Imágenes",
+    businesses: "Negocios",
+    app: "Aplicación",
+    openPlatform: "Abrir Plataforma",
+    viewImages: "Ver Imágenes",
+    sessionSummary: "Resumen de Sesión",
+    routeBuilt: "Ruta creada",
+    previewUpdated: "Vista previa actualizada",
+    sessionStarted: "Sesión iniciada",
+    start: "Comenzar",
+    qrStop: "Parada QR",
+    scans: "escaneos",
+    pts: "pts",
+    noBusiness: "No hay negocio activo"
+  }
+};
+
+function t(key) {
+  return translations[currentLanguage][key] || key;
+}
+
+function setLanguage(lang) {
+  currentLanguage = lang;
+
+  document.querySelector('[data-panel="platform"]').textContent = t("platform");
+  document.querySelector('[data-panel="proposal"]').textContent = t("proposal");
+  document.querySelector('[data-panel="images"]').textContent = t("images");
+  document.querySelector('[data-panel="businesses"]').childNodes[0].textContent = t("businesses");
+  document.querySelector('[data-panel="app"]').childNodes[0].textContent = t("app");
+
+  document.getElementById("impactBusiness").textContent = t("noBusiness");
+
+  renderRouteConfig(currentConfigKey);
+  renderStopCards();
+  updateMetrics();
+}
     const tabButtons = document.querySelectorAll("[data-panel]");
     const panels = document.querySelectorAll(".panel");
 
