@@ -1345,10 +1345,10 @@
         fillOpacity: 0
       }).addTo(map);
 
-      map.fitBounds(routeLine.getBounds(), { padding: [70, 70] });
-      map.setZoom(Math.max(map.getZoom(), 18));
-    }
-
+      map.fitBounds(routeLine.getBounds(), {
+        padding: [70, 70],
+        animate: false
+      });
     function renderRouteConfig(key) {
       currentConfigKey = key;
       currentConfig = routeConfigurations[key] || routeConfigurations["20-standard-food"];
@@ -1437,16 +1437,42 @@
       const minutes = document.getElementById("minutes").value;
       const pace = document.getElementById("pace").value;
       const rewardType = document.getElementById("rewardType").value;
-      return `${minutes}-${pace}-${rewardType}`;
+    
+      const exactKey = `${minutes}-${pace}-${rewardType}`;
+    
+      // use exact config if it exists
+      if (routeConfigurations[exactKey]) return exactKey;
+    
+      // fallback hierarchy that preserves selected time first
+      const fallbackKeys = [
+        `${minutes}-standard-${rewardType}`,
+        `${minutes}-standard-food`,
+        `20-standard-${rewardType}`,
+        `20-standard-food`
+      ];
+    
+      for (const key of fallbackKeys) {
+        if (routeConfigurations[key]) return key;
+      }
+    
+      return "20-standard-food";
     }
 
     function moveWalkerTo(index) {
       const stop = currentConfig.checkpoints[index];
       if (!walkerMarker) return;
-
+    
       walkerMarker.setLatLng([stop.lat, stop.lng]);
-      walkerMarker.setStyle({ opacity: 1, fillOpacity: 1 });
-      map.flyTo([stop.lat, stop.lng], 19, { duration: 0.8 });
+      walkerMarker.setStyle({
+        opacity: 1,
+        fillOpacity: 1
+      });
+    
+      // smooth follow without dramatic recentering
+      map.panTo([stop.lat, stop.lng], {
+        animate: true,
+        duration: 0.8
+      });
     }
 
     function handleStopClick(index) {
