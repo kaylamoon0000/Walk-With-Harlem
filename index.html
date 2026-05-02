@@ -1441,14 +1441,21 @@
     }
 
     function moveWalkerTo(index) {
-      const stop = currentConfig.checkpoints[index];
-      if (!walkerMarker) return;
+  const stop = currentConfig.checkpoints[index];
+  if (!walkerMarker) return;
 
-      walkerMarker.setLatLng([stop.lat, stop.lng]);
-      walkerMarker.setStyle({ opacity: 1, fillOpacity: 1 });
-      map.flyTo([stop.lat, stop.lng], 19, { duration: 0.8 });
-    }
+  walkerMarker.setLatLng([stop.lat, stop.lng]);
+  walkerMarker.setStyle({
+    opacity: 1,
+    fillOpacity: 1
+  });
 
+  // smooth follow without dramatic recentering
+  map.panTo([stop.lat, stop.lng], {
+    animate: true,
+    duration: 0.8
+  });
+}
     function handleStopClick(index) {
       const stop = currentStops[index];
 
