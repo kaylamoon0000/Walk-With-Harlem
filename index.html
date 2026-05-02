@@ -893,35 +893,8 @@
       </div>
     </section>
 
-    <section class="panel" id="proposal">
-      <div class="card">
-        <h2>Proposal</h2>
-        <p><strong>Walk With Harlem</strong> is a public-space activation platform designed to increase pedestrian movement, support small businesses, and improve the experience around Montefiore Square. It combines route personalization, walking verification, checkpoints, and reward systems in one unified flow.</p>
-      </div>
-
-      <div class="grid two">
-        <div class="card">
-          <h3>Project Overview</h3>
-          <p>The platform rewards users for walking along recommended routes, reaching checkpoints near businesses, and verifying those visits through QR-style interactions. The goal is to transform the space from a pass-through corridor into an active public destination.</p>
-        </div>
-        <div class="card">
-          <h3>Problem Definition</h3>
-          <p>Many public spaces do not create strong reasons to stay, explore, or support nearby stores. This platform responds by making movement visible, measurable, and directly tied to local business participation.</p>
-        </div>
-      </div>
-
-      <div class="grid two">
-        <div class="card">
-          <h3>Site / Context</h3>
-          <p>The design responds to movement patterns, accessibility, comfort, safety, and business activity. Direct paths become guided routes, and nearby storefronts become active parts of the public-space experience.</p>
-        </div>
-        <div class="card">
-          <h3>Final Proposal</h3>
-          <p>The chosen direction combines route guidance, real business checkpoints, reward personalization, and a trackable user journey. Businesses gain measurable participation data while users gain a more engaging walking experience.</p>
-        </div>
-      </div>
-    </section>
-
+    <section class="panel" id="proposal"></section>
+    
     <section class="panel" id="images">
       <div class="card">
         <h2>Images</h2>
@@ -1033,24 +1006,47 @@
   <script>
   let currentLanguage = "en";
 
-  const translations = {
-    en: {
-      platform: "Platform",
-      proposal: "Proposal",
-      images: "Images",
-      businesses: "Businesses",
-      app: "App",
-      openPlatform: "Open Platform",
-      viewImages: "View Images",
-      sessionSummary: "Session Summary",
-      routeBuilt: "Route built",
-      previewUpdated: "Preview updated",
-      sessionStarted: "Session started",
-      start: "Start",
-      qrStop: "QR stop",
-      scans: "scans",
-      pts: "pts",
-      noBusiness: "No active business yet"
+const translations = {
+  en: {
+    platform: "Platform",
+    proposal: "Proposal",
+    images: "Images",
+    businesses: "Businesses",
+    app: "App",
+    openPlatform: "Open Platform",
+    viewImages: "View Images",
+    sessionSummary: "Session Summary",
+
+    proposalHTML: `
+  <div class="card">
+    <h2>Proposal</h2>
+    <p><strong>Walk With Harlem</strong> is a public-space activation platform designed to increase pedestrian movement, support small businesses, and improve the experience around Montefiore Square. It combines route personalization, walking verification, checkpoints, and reward systems in one unified flow.</p>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <h3>Project Overview</h3>
+      <p>The platform rewards users for walking along recommended routes, reaching checkpoints near businesses, and verifying those visits through QR-style interactions. The goal is to transform the space from a pass-through corridor into an active public destination.</p>
+    </div>
+
+    <div class="card">
+      <h3>Problem Definition</h3>
+      <p>Many public spaces do not create strong reasons to stay, explore, or support nearby stores. This platform responds by making movement visible, measurable, and directly tied to local business participation.</p>
+    </div>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <h3>Site / Context</h3>
+      <p>The design responds to movement patterns, accessibility, comfort, safety, and business activity. Direct paths become guided routes, and nearby storefronts become active parts of the public-space experience.</p>
+    </div>
+
+    <div class="card">
+      <h3>Final Proposal</h3>
+      <p>The chosen direction combines route guidance, real business checkpoints, reward personalization, and a trackable user journey. Businesses gain measurable participation data while users gain a more engaging walking experience.</p>
+    </div>
+  </div>
+`,
   },
 
   es: {
@@ -1062,14 +1058,37 @@
     openPlatform: "Abrir Plataforma",
     viewImages: "Ver Imágenes",
     sessionSummary: "Resumen de Sesión",
-    routeBuilt: "Ruta creada",
-    previewUpdated: "Vista previa actualizada",
-    sessionStarted: "Sesión iniciada",
-    start: "Comenzar",
-    qrStop: "Parada QR",
-    scans: "escaneos",
-    pts: "pts",
-    noBusiness: "No hay negocio activo"
+
+   proposalHTML: `
+  <div class="card">
+    <h2>Propuesta</h2>
+    <p><strong>Walk With Harlem</strong> es una plataforma de activación del espacio público diseñada para aumentar el movimiento peatonal, apoyar a pequeños negocios y mejorar la experiencia alrededor de Montefiore Square. Combina personalización de rutas, verificación de caminatas, puntos de control y sistemas de recompensa en una sola experiencia unificada.</p>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <h3>Resumen del Proyecto</h3>
+      <p>La plataforma recompensa a los usuarios por caminar por rutas recomendadas, llegar a puntos de control cerca de negocios y verificar esas visitas mediante interacciones tipo QR. El objetivo es transformar el espacio de un corredor de paso en un destino público activo.</p>
+    </div>
+
+    <div class="card">
+      <h3>Definición del Problema</h3>
+      <p>Muchos espacios públicos no crean razones sólidas para quedarse, explorar o apoyar negocios cercanos. Esta plataforma responde haciendo que el movimiento sea visible, medible y directamente conectado con la participación comercial local.</p>
+    </div>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <h3>Sitio / Contexto</h3>
+      <p>El diseño responde a patrones de movimiento, accesibilidad, comodidad, seguridad y actividad comercial. Los caminos directos se convierten en rutas guiadas y los comercios cercanos pasan a formar parte activa de la experiencia pública.</p>
+    </div>
+
+    <div class="card">
+      <h3>Propuesta Final</h3>
+      <p>La dirección elegida combina guía de rutas, puntos de control reales en negocios, personalización de recompensas y un recorrido rastreable para el usuario. Los negocios obtienen datos medibles de participación mientras los usuarios disfrutan una experiencia de caminata más atractiva.</p>
+    </div>
+  </div>
+`,
   }
 };
 
