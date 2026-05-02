@@ -713,11 +713,6 @@
           <div class="brand-sub">Interactive platform concept</div>
         </div>
       </div>
-      <div style="display:flex; gap:8px;">
-        <button class="filter-btn" onclick="setLanguage('en')">🇺🇸 EN</button>
-        <button class="filter-btn" onclick="setLanguage('es')">🇪🇸 ES</button>
-      </div>
-      
       <div class="tabs">
         <button class="tab-btn active" data-panel="platform">
           Platform
@@ -893,8 +888,35 @@
       </div>
     </section>
 
-    <section class="panel" id="proposal"></section>
-    
+    <section class="panel" id="proposal">
+      <div class="card">
+        <h2>Proposal</h2>
+        <p><strong>Walk With Harlem</strong> is a public-space activation platform designed to increase pedestrian movement, support small businesses, and improve the experience around Montefiore Square. It combines route personalization, walking verification, checkpoints, and reward systems in one unified flow.</p>
+      </div>
+
+      <div class="grid two">
+        <div class="card">
+          <h3>Project Overview</h3>
+          <p>The platform rewards users for walking along recommended routes, reaching checkpoints near businesses, and verifying those visits through QR-style interactions. The goal is to transform the space from a pass-through corridor into an active public destination.</p>
+        </div>
+        <div class="card">
+          <h3>Problem Definition</h3>
+          <p>Many public spaces do not create strong reasons to stay, explore, or support nearby stores. This platform responds by making movement visible, measurable, and directly tied to local business participation.</p>
+        </div>
+      </div>
+
+      <div class="grid two">
+        <div class="card">
+          <h3>Site / Context</h3>
+          <p>The design responds to movement patterns, accessibility, comfort, safety, and business activity. Direct paths become guided routes, and nearby storefronts become active parts of the public-space experience.</p>
+        </div>
+        <div class="card">
+          <h3>Final Proposal</h3>
+          <p>The chosen direction combines route guidance, real business checkpoints, reward personalization, and a trackable user journey. Businesses gain measurable participation data while users gain a more engaging walking experience.</p>
+        </div>
+      </div>
+    </section>
+
     <section class="panel" id="images">
       <div class="card">
         <h2>Images</h2>
@@ -1004,119 +1026,6 @@
   ></script>
 
   <script>
-  let currentLanguage = "en";
-
-const translations = {
-  en: {
-    platform: "Platform",
-    proposal: "Proposal",
-    images: "Images",
-    businesses: "Businesses",
-    app: "App",
-    openPlatform: "Open Platform",
-    viewImages: "View Images",
-    sessionSummary: "Session Summary",
-
-    proposalHTML: `
-  <div class="card">
-    <h2>Proposal</h2>
-    <p><strong>Walk With Harlem</strong> is a public-space activation platform designed to increase pedestrian movement, support small businesses, and improve the experience around Montefiore Square. It combines route personalization, walking verification, checkpoints, and reward systems in one unified flow.</p>
-  </div>
-
-  <div class="grid two">
-    <div class="card">
-      <h3>Project Overview</h3>
-      <p>The platform rewards users for walking along recommended routes, reaching checkpoints near businesses, and verifying those visits through QR-style interactions. The goal is to transform the space from a pass-through corridor into an active public destination.</p>
-    </div>
-
-    <div class="card">
-      <h3>Problem Definition</h3>
-      <p>Many public spaces do not create strong reasons to stay, explore, or support nearby stores. This platform responds by making movement visible, measurable, and directly tied to local business participation.</p>
-    </div>
-  </div>
-
-  <div class="grid two">
-    <div class="card">
-      <h3>Site / Context</h3>
-      <p>The design responds to movement patterns, accessibility, comfort, safety, and business activity. Direct paths become guided routes, and nearby storefronts become active parts of the public-space experience.</p>
-    </div>
-
-    <div class="card">
-      <h3>Final Proposal</h3>
-      <p>The chosen direction combines route guidance, real business checkpoints, reward personalization, and a trackable user journey. Businesses gain measurable participation data while users gain a more engaging walking experience.</p>
-    </div>
-  </div>
-`,
-  },
-
-  es: {
-    platform: "Plataforma",
-    proposal: "Propuesta",
-    images: "Imágenes",
-    businesses: "Negocios",
-    app: "Aplicación",
-    openPlatform: "Abrir Plataforma",
-    viewImages: "Ver Imágenes",
-    sessionSummary: "Resumen de Sesión",
-
-   proposalHTML: `
-  <div class="card">
-    <h2>Propuesta</h2>
-    <p><strong>Walk With Harlem</strong> es una plataforma de activación del espacio público diseñada para aumentar el movimiento peatonal, apoyar a pequeños negocios y mejorar la experiencia alrededor de Montefiore Square. Combina personalización de rutas, verificación de caminatas, puntos de control y sistemas de recompensa en una sola experiencia unificada.</p>
-  </div>
-
-  <div class="grid two">
-    <div class="card">
-      <h3>Resumen del Proyecto</h3>
-      <p>La plataforma recompensa a los usuarios por caminar por rutas recomendadas, llegar a puntos de control cerca de negocios y verificar esas visitas mediante interacciones tipo QR. El objetivo es transformar el espacio de un corredor de paso en un destino público activo.</p>
-    </div>
-
-    <div class="card">
-      <h3>Definición del Problema</h3>
-      <p>Muchos espacios públicos no crean razones sólidas para quedarse, explorar o apoyar negocios cercanos. Esta plataforma responde haciendo que el movimiento sea visible, medible y directamente conectado con la participación comercial local.</p>
-    </div>
-  </div>
-
-  <div class="grid two">
-    <div class="card">
-      <h3>Sitio / Contexto</h3>
-      <p>El diseño responde a patrones de movimiento, accesibilidad, comodidad, seguridad y actividad comercial. Los caminos directos se convierten en rutas guiadas y los comercios cercanos pasan a formar parte activa de la experiencia pública.</p>
-    </div>
-
-    <div class="card">
-      <h3>Propuesta Final</h3>
-      <p>La dirección elegida combina guía de rutas, puntos de control reales en negocios, personalización de recompensas y un recorrido rastreable para el usuario. Los negocios obtienen datos medibles de participación mientras los usuarios disfrutan una experiencia de caminata más atractiva.</p>
-    </div>
-  </div>
-`
-  }
-};
-
-function t(key) {
-  return translations[currentLanguage][key] || key;
-}
-
-function setLanguage(lang) {
-  currentLanguage = lang;
-
-  document.querySelector('[data-panel="platform"]').textContent = t("platform");
-  document.querySelector('[data-panel="proposal"]').textContent = t("proposal");
-  document.querySelector('[data-panel="images"]').textContent = t("images");
-  document.querySelector('[data-panel="businesses"]').childNodes[0].textContent = t("businesses");
-  document.querySelector('[data-panel="app"]').childNodes[0].textContent = t("app");
-
-  document.getElementById("impactBusiness").textContent = t("noBusiness");
-
-  renderRouteConfig(currentConfigKey);
-  renderStopCards();
-  function updateMetrics() {
-    metricDistance.textContent = `${totalDistance.toFixed(1)} mi`;
-    metricScans.textContent = `${totalScans} ${t("scans")}`;
-    metricPoints.textContent = `${totalPoints} ${t("pts")}`;
-    userLeaderboardPoints.textContent = `${totalPoints} ${t("pts")}`;
-    impactVisits.textContent = `${businessVisits} visits`;
-    impactRewards.textContent = `${businessRewards} rewards`;
-}
     const tabButtons = document.querySelectorAll("[data-panel]");
     const panels = document.querySelectorAll(".panel");
 
@@ -1377,28 +1286,23 @@ function setLanguage(lang) {
     }
 
     function renderStopCards() {
-  checkpointList.innerHTML = currentConfig.checkpoints.map((stop, index) => `
-    <button class="stop-card ${index === 0 ? "" : "locked"}" data-stop-index="${index}">
-      <div class="stop-left">
-        <div class="stop-badge">${index + 1}</div>
-        <div>
-          <div class="stop-name">${stop.name}</div>
-          <div class="stop-meta-text">${stop.type} · ${stop.reward}</div>
-        </div>
-      </div>
-      <span class="tag">
-        <i class="fa-solid fa-location-dot"></i>
-        ${index === 0 ? t("start") : t("qrStop")}
-      </span>
-    </button>
-  `).join("");
+      checkpointList.innerHTML = currentConfig.checkpoints.map((stop, index) => `
+        <button class="stop-card ${index === 0 ? "" : "locked"}" data-stop-index="${index}">
+          <div class="stop-left">
+            <div class="stop-badge">${index + 1}</div>
+            <div>
+              <div class="stop-name">${stop.name}</div>
+              <div class="stop-meta-text">${stop.type} · ${stop.reward}</div>
+            </div>
+          </div>
+          <span class="tag"><i class="fa-solid fa-location-dot"></i>${index === 0 ? "Start" : "QR stop"}</span>
+        </button>
+      `).join("");
 
-  document.querySelectorAll(".stop-card").forEach(card => {
-    card.addEventListener("click", () =>
-      handleStopClick(Number(card.dataset.stopIndex))
-    );
-  });
-}
+      document.querySelectorAll(".stop-card").forEach(card => {
+        card.addEventListener("click", () => handleStopClick(Number(card.dataset.stopIndex)));
+      });
+    }
 
     function renderMap() {
       clearMapObjects();
@@ -1441,10 +1345,8 @@ function setLanguage(lang) {
         fillOpacity: 0
       }).addTo(map);
 
-      map.fitBounds(routeLine.getBounds(), {
-        padding: [70, 70],
-        animate: false
-      });
+      map.fitBounds(routeLine.getBounds(), { padding: [70, 70] });
+      map.setZoom(Math.max(map.getZoom(), 18));
     }
 
     function renderRouteConfig(key) {
@@ -1531,47 +1433,21 @@ function setLanguage(lang) {
       appGuide.className = "status blue";
     }
 
-function getSelectedConfigKey() {
-  const minutes = document.getElementById("minutes").value;
-  const pace = document.getElementById("pace").value;
-  const rewardType = document.getElementById("rewardType").value;
+    function getSelectedConfigKey() {
+      const minutes = document.getElementById("minutes").value;
+      const pace = document.getElementById("pace").value;
+      const rewardType = document.getElementById("rewardType").value;
+      return `${minutes}-${pace}-${rewardType}`;
+    }
 
-  const exactKey = `${minutes}-${pace}-${rewardType}`;
+    function moveWalkerTo(index) {
+      const stop = currentConfig.checkpoints[index];
+      if (!walkerMarker) return;
 
-  // use exact config if it exists
-  if (routeConfigurations[exactKey]) return exactKey;
-
-  // fallback hierarchy that preserves selected time first
-  const fallbackKeys = [
-    `${minutes}-standard-${rewardType}`,
-    `${minutes}-standard-food`,
-    `20-standard-${rewardType}`,
-    `20-standard-food`
-  ];
-
-  for (const key of fallbackKeys) {
-    if (routeConfigurations[key]) return key;
-  }
-
-  return "20-standard-food";
-}
-
-function moveWalkerTo(index) {
-  const stop = currentConfig.checkpoints[index];
-  if (!walkerMarker) return;
-
-  walkerMarker.setLatLng([stop.lat, stop.lng]);
-  walkerMarker.setStyle({
-    opacity: 1,
-    fillOpacity: 1
-  });
-
-  // smooth follow without dramatic recentering
-  map.panTo([stop.lat, stop.lng], {
-    animate: true,
-    duration: 0.8
-  });
-}
+      walkerMarker.setLatLng([stop.lat, stop.lng]);
+      walkerMarker.setStyle({ opacity: 1, fillOpacity: 1 });
+      map.flyTo([stop.lat, stop.lng], 19, { duration: 0.8 });
+    }
 
     function handleStopClick(index) {
       const stop = currentStops[index];
@@ -1847,5 +1723,4 @@ function moveWalkerTo(index) {
   </script>
 </body>
 </html>
-
 
