@@ -1352,23 +1352,28 @@ function setLanguage(lang) {
     }
 
     function renderStopCards() {
-      checkpointList.innerHTML = currentConfig.checkpoints.map((stop, index) => `
-        <button class="stop-card ${index === 0 ? "" : "locked"}" data-stop-index="${index}">
-          <div class="stop-left">
-            <div class="stop-badge">${index + 1}</div>
-            <div>
-              <div class="stop-name">${stop.name}</div>
-              <div class="stop-meta-text">${stop.type} · ${stop.reward}</div>
-            </div>
-          </div>
-          <span class="tag"><i class="fa-solid fa-location-dot"></i>${index === 0 ? "Start" : "QR stop"}</span>
-        </button>
-      `).join("");
+  checkpointList.innerHTML = currentConfig.checkpoints.map((stop, index) => `
+    <button class="stop-card ${index === 0 ? "" : "locked"}" data-stop-index="${index}">
+      <div class="stop-left">
+        <div class="stop-badge">${index + 1}</div>
+        <div>
+          <div class="stop-name">${stop.name}</div>
+          <div class="stop-meta-text">${stop.type} · ${stop.reward}</div>
+        </div>
+      </div>
+      <span class="tag">
+        <i class="fa-solid fa-location-dot"></i>
+        ${index === 0 ? t("start") : t("qrStop")}
+      </span>
+    </button>
+  `).join("");
 
-      document.querySelectorAll(".stop-card").forEach(card => {
-        card.addEventListener("click", () => handleStopClick(Number(card.dataset.stopIndex)));
-      });
-    }
+  document.querySelectorAll(".stop-card").forEach(card => {
+    card.addEventListener("click", () =>
+      handleStopClick(Number(card.dataset.stopIndex))
+    );
+  });
+}
 
     function renderMap() {
       clearMapObjects();
